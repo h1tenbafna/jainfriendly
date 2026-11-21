@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from .analyzer import Analysis
 from .knowledge import Knowledge, Profile, get_knowledge
 
+MIN_INGREDIENTS_FOR_FRIENDLY = 2
 VERDICT_RANK = {"friendly": 0, "likely_friendly": 1, "unclear": 2, "not_friendly": 3}
 
 
@@ -119,6 +120,10 @@ def evaluate(analysis: Analysis, spec, kb: Knowledge | None = None) -> ProfileRe
     if not analysis.ingredients:
         bump("unclear")
         res.caveats.append("No ingredients could be read.")
+    elif len(analysis.ingredients) < MIN_INGREDIENTS_FOR_FRIENDLY:
+        # Crowd-sourced or OCR'd lists are sometimes truncated ("chili powder extra").
+        res.caveats.append("Very short ingredient list: it may be incomplete. Check the pack.")
+        bump("likely_friendly")
 
     found = set(analysis.tags)
     res.not_detected = sorted(

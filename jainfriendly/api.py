@@ -2,23 +2,30 @@
 
     uvicorn jainfriendly.api:app --reload
 
-POST /v1/analyze        one product: tags + diet verdicts
-POST /v1/analyze/batch  many products (catalogue filtering for platforms)
+GET  /v1/products       browse the catalogue: search + diet / allergen / tag / platform filters
+GET  /v1/products/{id}  one product with full analysis and where to buy
+GET  /v1/catalog        catalogue facets (categories, platforms, verdict counts)
+GET  /v1/platforms      supported platforms
+POST /v1/analyze        analyse ingredient text directly
+POST /v1/analyze/batch  analyse many products at once (for platform integrations)
 GET  /v1/profiles       available diet profiles and their options
 GET  /v1/tags           tag taxonomy
 """
 
 from __future__ import annotations
 
+import threading
 from pathlib import Path
 from typing import Literal, Union
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from . import __version__
 from .analyzer import Analyzer
+from .catalog import Catalog
+from .catalog.platforms import PLATFORMS
 from .knowledge import get_knowledge
 from .profiles import DEFAULT_PROFILES, evaluate
 
@@ -140,6 +147,80 @@ def tags() -> dict:
     }
 
 
+# ---------------------------------------------------------------------------- catalogue
+_catalog: Catalog | None = None
+_lock = threading.Lock()
+ATTRIBUTION = (
+    "Product data from Open Food Facts (openfoodfacts.org), available under the Open "
+    "Database License; images CC BY-SA."
+)
+
+
+def get_catalog() -> Catalog:
+    global _catalog
+    if _catalog is None:
+        _catalog = Catalog()
+    return _catalog
+
+
+def set_catalog(catalog: Catalog) -> None:
+    global _catalog
+    _catalog = catalog
+
+
+@app.get("/v1/products")
+def list_products(
+    q: str | None = None,
+    diet: list[str] = Query(default=[], description="e.g. jain, jain_strict, vegan, vegetarian"),
+    free_from: list[str] = Query(default=[], description="allergens, e.g. peanut, milk, gluten"),
+    avoid: list[str] = Query(default=[], description="tag ids to exclude, e.g. onion, potato"),
+    platform: str | None = None,
+    category: str | None = None,
+    strict: bool = Query(False, description="only fully verified 'friendly' (exclude 'likely')"),
+    made_in_india: bool | None = None,
+    limit: int = Query(40, ge=1, le=200),
+    offset: int = Query(0, ge=0),
+) -> dict:
+    try:
+        with _lock:
+            res = get_catalog().search(
+                q=q, diet=diet, include_likely=not strict, free_from=free_from, avoid_tags=avoid,
+                platform=platform, category=category, made_in_india=made_in_india,
+                limit=limit, offset=offset,
+            )
+    except KeyError as exc:
+        raise HTTPException(status_code=422, detail=str(exc.args[0])) from exc
+    res["attribution"] = ATTRIBUTION
+    return res
+
+
+@app.get("/v1/products/{product_id}")
+def get_product(product_id: int) -> dict:
+    with _lock:
+        product = get_catalog().get(product_id)
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    product["attribution"] = ATTRIBUTION
+    product["disclaimer"] = DISCLAIMER
+    return product
+
+
+@app.get("/v1/catalog")
+def catalog_facets() -> dict:
+    with _lock:
+        return get_catalog().facets()
+
+
+@app.get("/v1/platforms")
+def platforms() -> list[dict]:
+    return [{"id": k, **v} for k, v in PLATFORMS.items()]
+
+
 @app.get("/", include_in_schema=False)
-def demo() -> FileResponse:
+def app_page() -> FileResponse:
+    return FileResponse(STATIC / "app.html")
+
+
+@app.get("/check", include_in_schema=False)
+def checker_page() -> FileResponse:
     return FileResponse(STATIC / "index.html")

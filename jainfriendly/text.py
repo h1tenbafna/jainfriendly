@@ -25,6 +25,9 @@ SPELLING = {
     "bisulfite": "bisulphite",
     "metabisulfite": "metabisulphite",
     "iodized": "iodised",
+    "lodised": "iodised",  # OCR: capital I read as l
+    "lodized": "iodised",
+    "iodine": "iodine",
     "stabilizer": "stabiliser",
     "stabilizing": "stabilising",
     "hydrolyzed": "hydrolysed",
@@ -33,10 +36,12 @@ SPELLING = {
     "yoghurt": "yogurt",
     "gelatine": "gelatin",
     "chili": "chilli",
+    "chilly": "chilli",  # "chillies" after plural stemming
+    "leave": "leaf",  # "leaves" after plural stemming
+    "soyabean": "soybean",
     "chile": "chilli",
     "mayonaise": "mayonnaise",
     "favour": "flavour",  # common typo on labels
-    "soyabean": "soybean",
     "caramelised": "caramelized",
     "fortified": "fortified",
     "aluminum": "aluminium",
@@ -54,7 +59,7 @@ DESCRIPTORS = frozenset(
     less than at quality grade select fine coarse kashmiri byadgi guntur desi indian soluble
     insoluble stuff product mix food type style made using containing approx approximately
     percent per cent pc pcs min max quantity qty roasted dressed seasoned spiced
-    ins e no number
+    ins e no number shudh satva swad
     """.split()
 )
 

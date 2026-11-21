@@ -180,3 +180,44 @@ def test_unknown_profile_and_option():
         evaluate(a, "keto")
     with pytest.raises(KeyError):
         evaluate(a, {"id": "jain", "options": {"bogus": True}})
+
+
+# ---------------------------------------------------------------- real-world label noise
+def test_vegetable_origin_clears_animal_doubt():
+    text = "Wheat flour, sugar, emulsifier of vegetable origin [INS 471, 472e], salt"
+    a = analyze(text)
+    assert "animal_fat" not in a.tags
+    assert verdict(text, "vegetarian") == "friendly"
+    assert verdict("Wheat flour, emulsifier (471)", "vegetarian") == "unclear"
+
+
+def test_contains_line_without_colon_is_allergen_statement():
+    a = analyze("Wheat flour, sugar.\nCONTAINS WHEAT, MILK AND SOYA")
+    assert a.declared_contains == ["WHEAT", "MILK", "SOYA"]
+    assert a.tags["soy"].status == "present"
+    # ...but "Contains added flavour" is still an ingredient, not an allergen line
+    assert analyze("Sugar. Contains added flavour").declared_contains == []
+
+
+def test_boilerplate_and_entities_are_ignored():
+    text = (
+        "Sugar, salt, colour (150d) (Numbers in brackets as per International Numbering System). "
+        "&quot;Contains caffeine&quot; STORE IN A COOL, HYGIENIC AND DRY PLACE. Mfd by XYZ Foods, Lic no 1001"
+    )
+    a = analyze(text)
+    assert not a.unrecognized
+    assert not any("hygienic" in n.name.lower() for n in a.ingredients)
+
+
+def test_ocr_noise_and_amounts_are_not_unrecognized():
+    a = analyze("Sugar, salt (RT), caffeine 9.2 mg/100 g, curry leaves, chillies")
+    assert not a.unrecognized
+
+
+def test_medicinal_roots_flagged_for_jain():
+    assert verdict("Honey-free herbal mix: tulsi, ashwagandha, mulethi", "jain") == "not_friendly"
+
+
+def test_very_short_list_is_never_fully_friendly():
+    assert verdict("chili powder extra", "jain") == "likely_friendly"
+    assert verdict("Salt, sugar", "jain") == "friendly"

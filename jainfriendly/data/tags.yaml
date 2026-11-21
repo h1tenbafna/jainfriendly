@@ -112,6 +112,7 @@ tags:
   chicory_root:   {label: Chicory root, groups: [underground]}
   lotus_root:     {label: Lotus root / stem (kamal kakdi), groups: [underground]}
   horseradish:    {label: Horseradish / wasabi, groups: [underground]}
+  medicinal_root: {label: "Medicinal root (ashwagandha, mulethi, shatavari)", groups: [underground]}
 
   # --- Other plant items people commonly ask about ---
   asafoetida:     {label: Asafoetida (hing), groups: []}

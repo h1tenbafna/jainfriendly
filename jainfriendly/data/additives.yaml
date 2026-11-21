@@ -79,6 +79,8 @@
 "341":  {name: Calcium phosphates}
 "343":  {name: Magnesium phosphates}
 "350,351,352": {name: Malates}
+"385":  {name: Calcium disodium EDTA}
+"386":  {name: Disodium EDTA}
 "400":  {name: Alginic acid}
 "401":  {name: Sodium alginate}
 "402":  {name: Potassium alginate}
@@ -170,6 +172,7 @@
 "968":  {name: Erythritol}
 "1100": {name: Amylase, possible: [{tag: animal_derived, likelihood: low}], reason: "Enzymes can be microbial, plant or animal sourced."}
 "1101": {name: Proteases, possible: [{tag: animal_derived, likelihood: low}], reason: "Enzymes can be microbial, plant or animal sourced."}
+"1102": {name: Glucose oxidase}
 "1104": {name: Lipases, possible: [{tag: animal_derived, likelihood: medium}], reason: "Lipases are often from animal (pancreatic/pregastric) tissue."}
 "1105": {name: Lysozyme, tags: [egg]}
 "1200": {name: Polydextrose}

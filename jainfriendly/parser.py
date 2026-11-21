@@ -9,6 +9,7 @@ statements.
 
 from __future__ import annotations
 
+import html
 import re
 from dataclasses import dataclass, field
 
@@ -29,8 +30,25 @@ _TRACE = re.compile(
 )
 _ALLERGEN = re.compile(
     r"(?:allergen(?:s)?(?:\s+(?:advice|information|info|declaration|statement|warning))?\s*[:\-]\s*"
-    r"(?:contains?\s*:?)?|\bcontains\s*:)"
+    r"(?:contains?\s*:?)?|\bcontains\s*:"
+    # "CONTAINS WHEAT, MILK AND SOYA" - but not "Contains added flavour / permitted colour"
+    r"|(?:^|(?<=[.\n]))\s*contains\s+(?!added|permitted|natural|nature|artificial|synthetic|"
+    r"colou?r|flavou?r|caffeine|no\b|less|only|approx|min|max|\d))"
     r"\s*(?P<body>[^.\n]*)",
+    re.I | re.M,
+)
+# Text after these markers is packaging boilerplate, not ingredients.
+_BOILERPLATE_END = re.compile(
+    r"\b(?:store\s+(?:in|at|under)|storage\s+(?:instruction|condition)|best\s+before|use\s+by|"
+    r"manufactured\s+by|marketed\s+by|mfd\.?\s+by|mkd\.?\s+by|packed\s+by|"
+    r"nutrition(?:al)?\s+(?:information|facts|value)|lic(?:ence|ense)?\.?\s+no|fssai|"
+    r"customer\s+care|consumer\s+care|net\s+(?:wt|weight|quantity)|batch\s+no|lot\s+no|"
+    r"mrp\b|for\s+mfg\s+unit)",
+    re.I,
+)
+_BOILERPLATE = re.compile(
+    r"\(?\s*(?:the\s+)?numbers?\s+in\s+brackets?[^)]*?numbering\s+system\s*\)?"
+    r"|\(?\s*ins\s+numbers?\s+as\s+per[^)]*\)?",
     re.I,
 )
 _SPLIT_LIST = re.compile(r"\s*(?:,|;|/|&|\band\b|\bor\b)\s*", re.I)
@@ -137,8 +155,31 @@ def _parse_list(s: str, i: int, closing: str | None) -> tuple[list[IngredientNod
     return out, i
 
 
+_FOOTNOTE_LINE = re.compile(r"^\s*[*#◊†¹²³]+\s*\S.*$")
+
+
+def _strip_footnotes(text: str) -> str:
+    """Drop footnote lines ("*As flavouring agent", "#Palmolein") after the first line,
+    and the reference marks themselves."""
+    lines = text.splitlines()
+    kept = lines[:1] + [ln for ln in lines[1:] if not _FOOTNOTE_LINE.match(ln)]
+    return re.sub(r"[*#◊†]+", "", "\n".join(kept))
+
+
+def clean_text(text: str) -> str:
+    """Remove markup, footnotes and packaging boilerplate around the ingredient list."""
+    text = html.unescape(html.unescape(text or ""))
+    text = text.replace("–", "-").replace("—", "-").replace("\r", "")
+    text = _strip_footnotes(text)
+    text = _BOILERPLATE.sub(" ", text)
+    m = _BOILERPLATE_END.search(text)
+    if m and m.start() > 20:
+        text = text[: m.start()]
+    return text
+
+
 def parse_label(text: str) -> ParsedLabel:
-    text = text.replace("–", "-").replace("—", "-")
+    text = clean_text(text)
     body, contains, may = _extract_statements(text)
     if re.search(r"\bingredients?\s*[:\-]", body, re.I):
         body = _LEADING_INGREDIENTS.sub("", body, count=1)

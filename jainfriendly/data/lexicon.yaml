@@ -397,7 +397,7 @@
 - match: [corn, maize, corn grit, sweet corn, cornmeal, maize flour, makki atta, corn flake, popcorn, baby corn]
 - match: [sorghum, jowar, bajra, pearl millet, millet, ragi, finger millet, nachni, foxtail millet, kodo millet, little millet, barnyard millet, samak, amaranth, rajgira, quinoa]
 - match: [gram flour, besan, chickpea, chickpea flour, chana, kabuli chana, kala chana, bengal gram, chana dal, roasted chana, green gram, moong, mung, moong dal, urad, urad dal, black gram, masoor, masoor dal, lentil, toor, toor dal, arhar, pigeon pea, moth bean, matki, moth, rajma, kidney bean, bean, black bean, pea, green pea, dried pea, yellow pea, lobia, cowpea, chawli, horse gram, kulthi, dal, pulse, legume, soaked dal]
-- match: [edible vegetable oil, vegetable oil, refined vegetable oil, palm oil, palm, palmolein, palmolein oil, refined palmolein, palm kernel oil, sunflower oil, refined sunflower oil, safflower oil, rice bran oil, cottonseed oil, cotton seed oil, cotton seed, cottonseed, refined cottonseed oil, corn oil, canola oil, rapeseed oil, olive oil, extra virgin olive oil, vegetable fat, edible vegetable fat, hydrogenated vegetable fat, hydrogenated vegetable oil, vanaspati, interesterified vegetable fat, partially hydrogenated vegetable oil, edible vegetable oil and fat, palm fat, fractionated palm oil, vegetable shortening, cocoa butter equivalent, flaxseed oil, avocado oil]
+- match: [edible vegetable oil, vegetable oil, refined vegetable oil, palm oil, palm, palmolein, sunflower, palmolein oil, refined palmolein, palm kernel oil, sunflower oil, refined sunflower oil, safflower oil, rice bran oil, cottonseed oil, cotton seed oil, cotton seed, cottonseed, refined cottonseed oil, corn oil, canola oil, rapeseed oil, olive oil, extra virgin olive oil, vegetable fat, edible vegetable fat, hydrogenated vegetable fat, hydrogenated vegetable oil, vanaspati, interesterified vegetable fat, partially hydrogenated vegetable oil, edible vegetable oil and fat, palm fat, fractionated palm oil, vegetable shortening, cocoa butter equivalent, flaxseed oil, avocado oil]
 - match: [tomato, tomato powder, tomato paste, tomato puree, tomato pulp, sun dried tomato, lemon, lemon juice, lemon powder, lime, lime juice, orange, orange peel]
 - match: [spinach, palak, cabbage, cauliflower, broccoli, cucumber, pumpkin, bottle gourd, lauki, ridge gourd, bitter gourd, karela, okra, bhindi, drumstick, moringa, french bean, cluster bean, gavar, zucchini, lettuce, kale, methi leaf, amaranth leaf, fenugreek leaf, olive, avocado, corn kernel, raw banana, plantain, raw mango, jackfruit, raw papaya]
 - match: [banana, apple, pineapple, strawberry, grape, raisin, kishmish, munakka, date, khajur, apricot, cranberry, blueberry, cherry, papaya, watermelon, melon, muskmelon, litchi, lychee, berry, mango, mango pulp, alphonso mango, guava, pomegranate, pear, peach, plum, kiwi, passion fruit, blackcurrant, mixed fruit, fruit, fruit pulp, fruit juice, fruit concentrate, tutti frutti, candied fruit, amla, jamun, sitaphal, chikoo, sapota, orange juice concentrate]
@@ -421,3 +421,38 @@
 - match: [oligofructose, fructooligosaccharide, fos]
   possible: [{tag: chicory_root, likelihood: medium}]
   reason: Oligofructose/FOS is commonly derived from chicory root inulin.
+
+# ============================ Added from real Open Food Facts India labels ============================
+- match: [ashwagandha, withania somnifera, mulethi, mulhatti, licorice, liquorice, licorice root, glycyrrhiza glabra, yashtimadhu, shatavari, asparagus racemosus, safed musli, vidari, vidarikand, kalmegh root, punarnava, galangal, kulanjan, nagarmotha, jatamansi, sarpagandha]
+  tags: [medicinal_root]
+- match: [zingiber officinale]
+  possible:
+    - {tag: ginger_fresh, likelihood: medium}
+    - {tag: ginger_dry, likelihood: high}
+  reason: Botanical name for ginger; the label does not say whether fresh or dried.
+- match: [curcuma longa]
+  tags: [turmeric_dry]
+- match: [allium sativum]
+  tags: [garlic]
+- match: [allium cepa]
+  tags: [onion]
+- match: [daucus carota]
+  tags: [carrot]
+- match: [elettaria cardamomum, piper nigrum, piper longum, long pepper, pipali, pippali, pipal, tamarindus indica, trachyspermum ammi, cuminum cyminum, coriandrum sativum, foeniculum vulgare, cinnamomum zeylanicum, cinnamomum verum, syzygium aromaticum, myristica fragrans, ocimum sanctum, mentha arvensis, emblica officinalis, phyllanthus emblica, terminalia chebula, haritaki, terminalia bellirica, baheda, triphala, tulsi leaf, brahmi, giloy, tinospora cordifolia, neem, moringa oleifera]
+- match: [caffeine, taurine, sucrose, levulose, d glucose, inositol, l carnitine, glucuronolactone, cola, kola nut, kola nut extract, cola nut extract, cola flavour, lemon lime flavour]
+- match: [gram meal, gram dal flour, roasted gram flour, sattu, chana sattu]
+- match: [hydrogenated oil, hydrogenated fat, hydrogenated vegetable oil and fat]
+- match: [cereal extract, malted cereal extract]
+  possible: [{tag: barley, likelihood: high}]
+  reason: Cereal extracts are usually malted barley.
+- match: [acesulfame k, acesulfame, sweetening agent, nutritive sweetener]
+- match: [flax, linseed, rose, rose petal, rose water, gulkand, rose extract, kewra, kewra water, rooh afza]
+- match: [sequestrant, anticaking substance, firming substance, preservatives and antioxidant]
+- match: [bacteria, lactic culture, lactic acid bacteria, starter culture, live culture, yogurt culture]
+- match: [mineral water, purified water, carbonated water, soda water, potable water]
+- match: [dashmool, dashmula, dashamool, dashamoola, bilva root, agnimantha, clerodendrum phlomidis, gmelina arborea, oroxylum indicum, shyonaka, desmodium gangeticum, shalparni, uraria picta, prishnaparni, solanum indicum, brihati, solanum surattense, solanum xanthocarpum, kantakari, cyperus rotundus, hedychium spicatum, kachur, inula racemosa, inula recemosa, pushkarmool]
+  tags: [medicinal_root]
+- match: [chia, masur whole, whole masoor, aegle marmelos, bael, tribulus terrestris, gokshura, vitis vinifera, pistacia integerrima, kakdasinghi, sida cordifolia, bala, phyllanthus niruri, bhumi amla, leptadenia reticulata, jivanti, martynia annua, cinnamomum tamala, mesua ferrea, nagkesar, pyridoxine hydrochloride, pyridoxine, cyanocobalamin, b12, b6, b1, b2]
+- match: [glycerine]
+  possible: [{tag: animal_fat, likelihood: low}]
+  reason: Usually from vegetable oil in India, but can be from animal fat.

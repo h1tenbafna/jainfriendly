@@ -19,13 +19,21 @@ NON_VEG_GROUPS = {"meat", "fish", "crustacean", "mollusc", "egg", "animal_byprod
 
 _INS_PREFIXED = re.compile(r"\b(?:ins|e)\s*[-.:]?\s*(\d{3,4})\s*([a-f])?", re.I)
 _BARE_NUMBER = re.compile(r"(?<![\d.])(\d{3,4})\s*([a-f])?(?![\d%.])", re.I)
-_CODE_FILLER = {"ins", "e", "and", "i", "ii", "iii", "iv", "v", "vi"}
+_CODE_FILLER = {"ins", "e", "and", "i", "ii", "iii", "iv", "v", "vi", "a", "b", "c", "d", "f"}
+UNITS = {"mg", "g", "kg", "ml", "l", "kcal", "kj", "mcg", "ug", "iu", "per", "serving", "w", "v", "ppm"}
+_PLANT_ORIGIN = re.compile(
+    r"\b(?:of|from)\s+(?:vegetable|plant|non[\s-]?animal)\s+(?:origin|source)"
+    r"|\b(?:vegetable|plant)[\s-]+(?:based|origin|sourced?)\b",
+    re.I,
+)
+# "Possible" tags that a label's "of vegetable origin" rules out.
+ANIMAL_SOURCE_TAGS = {"animal_fat", "animal_derived", "meat", "fish", "egg", "lanolin", "animal_rennet"}
 
 
 def _is_only_codes(text: str) -> bool:
     tokens = re.findall(r"[a-z0-9]+", text.lower())
     return bool(tokens) and all(
-        t in _CODE_FILLER or re.fullmatch(r"\d{3,4}[a-f]?", t) for t in tokens
+        t in _CODE_FILLER or re.fullmatch(r"\d{3,4}[a-f]?(?:i{1,3}|iv|v|vi)?", t) for t in tokens
     ) and any(t[0].isdigit() for t in tokens)
 
 
@@ -187,8 +195,10 @@ class Analyzer:
         )
 
     # -- internals ----------------------------------------------------------------------
-    def _walk(self, node, path, findings, unrecognized) -> None:
+    def _walk(self, node, path, findings, unrecognized, plant_origin: bool = False) -> None:
         here = path + [node.name]
+        plant_origin = plant_origin or bool(_PLANT_ORIGIN.search(node.name))
+        start = len(findings)
         where = " › ".join(here)
         additives, rest = _find_additives(node.name, self.kb)
         matches, leftover = _match_phrases(tokenize(rest), self.kb)
@@ -203,12 +213,21 @@ class Analyzer:
         for m in matches:
             self._emit(m.term, m.phrase, where, "ingredient", bool(node.children), m.flavour_only, findings)
 
-        meaningful_left = [t for t in leftover if t not in DESCRIPTORS and not t.isdigit()]
-        if not node.children and not matches and not additives and meaningful_left:
+        meaningful_left = [
+            t for t in leftover
+            if t not in DESCRIPTORS and t not in UNITS and not re.fullmatch(r"\d+[a-z]{0,3}", t)
+        ]
+        is_noise = all(len(t) <= 2 for t in meaningful_left)  # OCR scraps like "rt", "bk"
+        if not node.children and not matches and not additives and meaningful_left and not is_noise:
             unrecognized.append(where)
 
+        if plant_origin:  # e.g. "Emulsifier of vegetable origin (471)" is not animal-derived
+            findings[start:] = [
+                (tag, ev) for tag, ev in findings[start:]
+                if not (ev.status == "possible" and tag in ANIMAL_SOURCE_TAGS)
+            ]
         for child in node.children:
-            self._walk(child, here, findings, unrecognized)
+            self._walk(child, here, findings, unrecognized, plant_origin)
 
     def _emit(self, term, matched, where, source, has_children, flavour_only, findings) -> None:
         for tag_id in term.tags:

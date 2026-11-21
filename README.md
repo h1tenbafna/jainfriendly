@@ -1,8 +1,34 @@
 # JainFriendly
 
-**Know what's inside packaged food.** JainFriendly reads an ingredient list and tags what it contains (onion, potato, carrot, milk, gelatin...), what it *might* contain hidden inside generic ingredients ("seasoning", "natural flavour", INS 631), and checks the result against Jain, vegetarian, vegan and allergen profiles. Every result shows the ingredient that caused it.
+**Browse packaged food by what's inside it.** JainFriendly gathers products from many sources, reads each ingredient list, and tags what it contains (onion, potato, carrot, milk, gelatin…) and what it *might* contain hidden inside generic ingredients ("seasoning", "natural flavour", INS 631). Users filter the whole catalogue by diet (Jain, strict Jain, vegetarian, vegan), allergens, or specific ingredients, and see where each product is sold.
 
-![Demo](docs/demo.png)
+![Catalogue](docs/catalog.png)
+
+## How it fits together
+
+```
+ sources (connectors)              catalogue                         users
+ ─────────────────────            ───────────────────────          ───────────────────────
+ Open Food Facts India  ─┐        match by barcode / brand+name     browse & search
+ platform / affiliate   ─┼─────▶  merge offers per platform  ─────▶  filter: Jain, vegan,
+   feeds (CSV/JSON)      │        analyse ingredients → tags         free-from, avoid onion…
+ manufacturer data     ─┘        verdicts per diet & allergen       where to buy + evidence
+```
+
+- **Connectors** (`jainfriendly/catalog/connectors/`) turn a source into products and offers. Open Food Facts works today. The **feed importer** takes CSV/JSON from affiliate programmes, brand catalogues or platform data-sharing.
+- **Matching:** one product per barcode, falling back to brand + name + pack size, so the same chips on Blinkit and Zepto become one product with two offers. If sources disagree on ingredients, the most trusted source wins (manufacturer > platform > feed > Open Food Facts).
+- **Analysis** runs at import and again whenever the knowledge base changes (`reanalyze`).
+
+### Platforms
+
+| Platform | Status | Legitimate data route |
+|---|---|---|
+| Zepto, Blinkit, Swiggy Instamart | feed import ready | Partnership / catalogue sharing (no public API; prices and stock depend on pincode) |
+| BigBasket | feed import ready | Partnership / affiliate feed |
+| Amazon India | feed import ready | Associates + Product Advertising API (links and prices, no ingredients) |
+| Flipkart | feed import ready | Affiliate API product feeds (links and prices, no ingredients) |
+
+I chose not to build scrapers for these platforms. Their terms forbid it, and it would undermine the goal of selling this API to the same platforms.
 
 ## Why tags first
 
@@ -20,10 +46,21 @@ Verdicts: `friendly` · `likely_friendly` (only low-likelihood possibilities, tr
 
 ```bash
 pip install -e ".[dev]"
-pytest                                    # run the tests
-uvicorn jainfriendly.api:app --reload     # open http://localhost:8000 for the demo, /docs for the API
+python -m jainfriendly.catalog sync-off --pages 10     # import ~1,000 Indian products from Open Food Facts
+python -m jainfriendly.catalog import-feed offers.csv --platform blinkit   # add store offers
+uvicorn jainfriendly.api:app                            # http://localhost:8000 (catalogue), /check, /docs
+pytest
+```
+
+Other catalogue commands: `barcode <ean>…`, `reanalyze`, `stats`, `todo` (the most common unrecognised ingredients, i.e. what to add to the lexicon next).
+
+### Ingredient checker and analysis API
+
+```bash
 python -m jainfriendly "Potato, palm oil, seasoning (salt, onion powder), INS 631" -p jain
 ```
+
+Catalogue API: `GET /v1/products?diet=jain&free_from=peanut&avoid=onion&platform=blinkit&category=…&strict=true&q=…`, `GET /v1/products/{id}`, `GET /v1/catalog`, `GET /v1/platforms`.
 
 ### API
 
@@ -61,10 +98,15 @@ Everything is plain, reviewable YAML in [`jainfriendly/data/`](jainfriendly/data
 
 The loader rejects unknown tags, duplicate phrases, uncited "possible" entries and malformed fields. See [docs/METHODOLOGY.md](docs/METHODOLOGY.md) for how decisions are made and how to contribute.
 
+## Data licence
+
+Open Food Facts data is under the [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/), and its images under CC BY-SA. The app shows attribution on every page. A public database built from it must stay ODbL. Your own analysis and code can be licensed however you choose.
+
 ## Roadmap
 
-- [ ] Read ingredient lists from product photos (OCR), plus a browser extension or share-sheet for Blinkit, Zepto and Amazon pages.
-- [ ] Product database keyed by barcode/EAN, seeded from Open Food Facts India, with verified results and version history.
+- [ ] Read ingredients from product photos (OCR), to fill the ~25% of products that have a photo but no ingredient text.
+- [ ] Platform data: affiliate feeds (Amazon, Flipkart) for links and prices; data-sharing pilots with a quick-commerce platform.
+- [ ] Pincode-aware availability for quick-commerce.
 - [ ] Review the Jain rulebook with Jain scholars and community bodies; publish it.
 - [ ] Manufacturer attestation flow, so brands can confirm what is inside "seasoning" and "flavour" and earn a "verified" status.
 - [ ] Log unrecognised ingredients across many products and use the counts to decide what to add to the lexicon next.
