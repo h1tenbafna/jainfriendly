@@ -1,0 +1,163 @@
+# Tag taxonomy.
+#
+# A *tag* is a concrete thing that can be inside a product (onion, potato, milk, gelatin...).
+# A *group* is a class of tags that diet profiles reason about (underground, allium, dairy...).
+# Diet profiles (profiles.yaml) never look at raw ingredient text, only at tags and groups,
+# so every verdict can be traced back to: ingredient text -> tag -> group -> profile rule.
+
+groups:
+  underground:
+    label: Root & underground vegetables (kandmool)
+    description: >-
+      Roots, tubers, bulbs, corms and rhizomes eaten fresh, frozen or dehydrated.
+      Traditionally avoided in Jain diets because harvesting uproots the whole plant and
+      underground parts are believed to host countless micro-organisms (ananthkay).
+  underground_dried:
+    label: Dried rhizome spices (sonth, haldi)
+    description: >-
+      Dry ginger and dry turmeric. Accepted in most Jain households because they are dried
+      before use; avoided by some stricter practitioners.
+  allium:
+    label: Onion family (alliums)
+    description: Onion, garlic, shallot, leek, chives, spring onion.
+  meat:
+    label: Meat & poultry
+    description: Flesh of land animals and birds, and fats or extracts made from them.
+  fish:
+    label: Fish
+    description: Fish and fish-derived ingredients.
+  crustacean:
+    label: Crustaceans
+    description: Shrimp, prawn, crab, lobster and similar.
+  mollusc:
+    label: Molluscs
+    description: Squid, octopus, oyster, clam, mussel and similar.
+  egg:
+    label: Egg
+    description: Eggs and egg-derived ingredients.
+  dairy:
+    label: Milk & dairy
+    description: Milk and anything made from it.
+  animal_byproduct:
+    label: Slaughter by-products
+    description: >-
+      Ingredients made from animal bodies other than flesh, such as gelatin, animal rennet,
+      bone phosphate, collagen and animal fats.
+  insect_derived:
+    label: Insect-derived
+    description: Carmine/cochineal (crushed insects), shellac (lac insect resin).
+  bee_product:
+    label: Honey & bee products
+    description: Honey, beeswax.
+  fungi:
+    label: Mushrooms & fungi
+    description: Mushrooms, truffles. Avoided in Jain diets.
+  yeast:
+    label: Yeast
+    description: Yeast and yeast extracts. Many Jains consume it; some stricter practitioners avoid it.
+  fermented:
+    label: Fermented ingredients
+    description: Vinegar, soy sauce, miso and similar. Avoided by some stricter Jain practitioners.
+  alcohol:
+    label: Alcohol
+    description: Ethanol, wine, spirits and other alcoholic ingredients.
+  many_seeded:
+    label: Many-seeded vegetables & fruits (bahubija)
+    description: Brinjal, fig. Avoided by some Jain practitioners.
+  non_veg_declared:
+    label: Declared non-vegetarian
+    description: Product carries the FSSAI brown (non-vegetarian) mark.
+
+  # Allergen groups: India's FSSAI (Labelling & Display) Regulations 2020 list items marked *.
+  allergen_gluten:   {label: Gluten (cereals), allergen: true}   # *
+  allergen_crustacean: {label: Crustaceans, allergen: true}      # *
+  allergen_milk:     {label: Milk, allergen: true}               # *
+  allergen_egg:      {label: Egg, allergen: true}                # *
+  allergen_fish:     {label: Fish, allergen: true}               # *
+  allergen_peanut:   {label: Peanut, allergen: true}             # *
+  allergen_tree_nut: {label: Tree nuts, allergen: true}          # *
+  allergen_soy:      {label: Soy, allergen: true}                # *
+  allergen_sulphite: {label: Sulphites, allergen: true}          # *
+  allergen_sesame:   {label: Sesame, allergen: true}
+  allergen_mustard:  {label: Mustard, allergen: true}
+  allergen_mollusc:  {label: Molluscs, allergen: true}
+  allergen_celery:   {label: Celery, allergen: true}
+  allergen_lupin:    {label: Lupin, allergen: true}
+
+tags:
+  # --- Onion family ---
+  onion:          {label: Onion, groups: [allium, underground]}
+  garlic:         {label: Garlic, groups: [allium, underground]}
+  shallot:        {label: Shallot, groups: [allium, underground]}
+  leek:           {label: Leek, groups: [allium]}
+  spring_onion:   {label: Spring onion, groups: [allium]}
+  chives:         {label: Chives, groups: [allium]}
+
+  # --- Roots, tubers, rhizomes ---
+  potato:         {label: Potato, groups: [underground]}
+  sweet_potato:   {label: Sweet potato, groups: [underground]}
+  carrot:         {label: Carrot, groups: [underground]}
+  beetroot:       {label: Beetroot, groups: [underground]}
+  radish:         {label: Radish, groups: [underground]}
+  turnip:         {label: Turnip, groups: [underground]}
+  ginger_fresh:   {label: Ginger (fresh), groups: [underground]}
+  ginger_dry:     {label: Dry ginger (sonth), groups: [underground_dried]}
+  turmeric_fresh: {label: Turmeric (fresh), groups: [underground]}
+  turmeric_dry:   {label: Turmeric (dried / haldi), groups: [underground_dried]}
+  yam:            {label: Yam (suran / jimikand), groups: [underground]}
+  colocasia:      {label: Colocasia (arbi / taro), groups: [underground]}
+  tapioca:        {label: Tapioca / cassava (sabudana), groups: [underground]}
+  arrowroot:      {label: Arrowroot, groups: [underground]}
+  konjac:         {label: Konjac, groups: [underground]}
+  chicory_root:   {label: Chicory root, groups: [underground]}
+  lotus_root:     {label: Lotus root / stem (kamal kakdi), groups: [underground]}
+  horseradish:    {label: Horseradish / wasabi, groups: [underground]}
+
+  # --- Other plant items people commonly ask about ---
+  asafoetida:     {label: Asafoetida (hing), groups: []}
+  brinjal:        {label: Brinjal (eggplant), groups: [many_seeded]}
+  fig:            {label: Fig (anjeer), groups: [many_seeded]}
+  mushroom:       {label: Mushroom, groups: [fungi]}
+  yeast:          {label: Yeast, groups: [yeast]}
+  vinegar:        {label: Vinegar, groups: [fermented]}
+  fermented_product: {label: Fermented ingredient, groups: [fermented]}
+  alcohol:        {label: Alcohol, groups: [alcohol]}
+  coconut:        {label: Coconut, groups: []}
+  buckwheat:      {label: Buckwheat (kuttu), groups: []}
+
+  # --- Animal-derived ---
+  meat:           {label: Meat / poultry, groups: [meat]}
+  animal_fat:     {label: Animal fat, groups: [animal_byproduct]}
+  gelatin:        {label: Gelatin, groups: [animal_byproduct]}
+  animal_rennet:  {label: Animal rennet, groups: [animal_byproduct]}
+  bone_phosphate: {label: Bone phosphate / bone char, groups: [animal_byproduct]}
+  collagen:       {label: Collagen, groups: [animal_byproduct]}
+  lanolin:        {label: Lanolin (wool grease), groups: [animal_byproduct]}
+  isinglass:      {label: Isinglass, groups: [animal_byproduct, fish]}
+  animal_derived: {label: Animal-derived (unspecified), groups: [animal_byproduct]}
+  fish:           {label: Fish, groups: [fish, allergen_fish]}
+  crustacean:     {label: "Crustacean (shrimp, prawn, crab)", groups: [crustacean, allergen_crustacean]}
+  mollusc:        {label: "Mollusc (squid, oyster)", groups: [mollusc, allergen_mollusc]}
+  egg:            {label: Egg, groups: [egg, allergen_egg]}
+  milk:           {label: Milk & dairy, groups: [dairy, allergen_milk]}
+  honey:          {label: Honey, groups: [bee_product]}
+  beeswax:        {label: Beeswax, groups: [bee_product]}
+  carmine:        {label: Carmine / cochineal, groups: [insect_derived]}
+  shellac:        {label: Shellac, groups: [insect_derived]}
+
+  # --- Allergen sources ---
+  wheat:          {label: Wheat (gluten), groups: [allergen_gluten]}
+  barley:         {label: Barley / malt (gluten), groups: [allergen_gluten]}
+  rye:            {label: Rye (gluten), groups: [allergen_gluten]}
+  oats:           {label: Oats, groups: [allergen_gluten]}
+  peanut:         {label: Peanut, groups: [allergen_peanut]}
+  tree_nut:       {label: Tree nuts, groups: [allergen_tree_nut]}
+  soy:            {label: Soy, groups: [allergen_soy]}
+  sesame:         {label: Sesame, groups: [allergen_sesame]}
+  mustard:        {label: Mustard, groups: [allergen_mustard]}
+  celery:         {label: Celery, groups: [allergen_celery]}
+  lupin:          {label: Lupin, groups: [allergen_lupin]}
+  sulphite:       {label: Sulphites, groups: [allergen_sulphite]}
+
+  # --- Label-level declarations ---
+  non_veg_mark:   {label: FSSAI non-vegetarian (brown) mark, groups: [non_veg_declared]}

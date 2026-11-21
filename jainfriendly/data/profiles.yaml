@@ -1,0 +1,86 @@
+# Diet profiles are rules over tags/groups. They never read ingredient text directly.
+#
+#   avoid:    "group:<id>" or "tag:<id>" targets that make a product NOT friendly.
+#   options:  personal preferences a user can switch on/off. `avoid: false` means the option
+#             is OFF by default (the tags are tolerated, but still shown to the user).
+#   extends:  inherit avoid list and options from another profile.
+#   option_defaults: override option defaults of the parent profile.
+#   trace_policy: how "may contain traces of X" is treated:
+#             caveat  -> product can still be "likely friendly" (cross-contact only)
+#             unclear -> product is "unclear" (appropriate for allergies)
+#
+# Allergen profiles ("allergen:milk", "allergen:peanut", ...) are generated automatically
+# from every group with `allergen: true` in tags.yaml.
+
+profiles:
+  vegetarian:
+    name: Vegetarian
+    description: >-
+      Indian (lacto-) vegetarian, as defined by FSSAI: no meat, poultry, fish, seafood, eggs,
+      or ingredients from slaughtered animals or insects. Milk and honey are allowed.
+    avoid:
+      - group:meat
+      - group:fish
+      - group:crustacean
+      - group:mollusc
+      - group:egg
+      - group:animal_byproduct
+      - group:insect_derived
+      - group:non_veg_declared
+    trace_policy: caveat
+
+  vegan:
+    name: Vegan
+    extends: vegetarian
+    description: No animal products at all, including milk, honey and beeswax.
+    avoid:
+      - group:dairy
+      - group:bee_product
+    trace_policy: caveat
+
+  jain:
+    name: Jain
+    extends: vegetarian
+    description: >-
+      Jain vegetarian: no root or underground vegetables (kandmool), no onion family, no honey,
+      no mushrooms, no alcohol. Dry ginger (sonth), dry turmeric (haldi) and yeast are tolerated
+      by default because most Jain households use them; switch them on below if you avoid them.
+    avoid:
+      - group:underground
+      - group:allium
+      - group:bee_product
+      - group:fungi
+      - group:alcohol
+    options:
+      dried_rhizomes:
+        label: Avoid dry ginger (sonth) & dry turmeric (haldi)
+        targets: [group:underground_dried]
+        avoid: false
+      yeast:
+        label: Avoid yeast
+        targets: [group:yeast]
+        avoid: false
+      fermented:
+        label: Avoid fermented ingredients (vinegar, soy sauce)
+        targets: [group:fermented]
+        avoid: false
+      many_seeded:
+        label: Avoid many-seeded vegetables (brinjal, fig)
+        targets: [group:many_seeded]
+        avoid: false
+      dairy:
+        label: Avoid dairy (Jain vegan)
+        targets: [group:dairy]
+        avoid: false
+    trace_policy: caveat
+
+  jain_strict:
+    name: Jain (strict)
+    extends: jain
+    description: Jain with every optional restriction switched on (dry ginger/turmeric, yeast, fermented, many-seeded).
+    option_defaults:
+      dried_rhizomes: true
+      yeast: true
+      fermented: true
+      many_seeded: true
+    trace_policy: caveat

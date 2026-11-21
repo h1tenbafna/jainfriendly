@@ -1,0 +1,423 @@
+# Ingredient lexicon: maps phrases found on labels to tags.
+#
+#   match:    phrases (any case/plural/spelling variant; text is normalised before matching,
+#             so "Onions", "ONION" and "onion" are the same, and flavor == flavour,
+#             sulfite == sulphite, iodized == iodised, chili == chilli, gelatine == gelatin).
+#   tags:     tags that are definitely present when the phrase appears.
+#   possible: tags that MAY be present (hidden / unspecified source), each with a likelihood
+#             (high | medium | low). `reason` explains why, and is shown to users.
+#   An entry with neither tags nor possible is a *known, harmless* ingredient: it is listed
+#   so we can say "we recognised every ingredient" rather than silently skipping it.
+#
+# Matching is longest-phrase-first, so "sweet potato" wins over "potato",
+# "coconut milk" over "milk", and "peanut butter" over "butter".
+#
+# When a generic term (e.g. "seasoning") is followed by a bracketed breakdown on the label,
+# the breakdown is trusted and the term's `possible` list is not applied.
+
+# ============================ Onion family ============================
+- match: [onion, pyaz, pyaaz, piyaz, kanda, red onion, white onion, onion powder]
+  tags: [onion]
+- match: [spring onion, green onion, scallion, onion leaves, hara pyaz]
+  tags: [spring_onion]
+- match: [garlic, lahsun, lehsun, lasun, lassan, garlic powder]
+  tags: [garlic]
+- match: [shallot, sambar onion, small onion]
+  tags: [shallot]
+- match: [leek]
+  tags: [leek]
+- match: [chive]
+  tags: [chives]
+
+# ============================ Roots & tubers ============================
+- match: [potato, aloo, alu, batata, potato starch, potato flake]
+  tags: [potato]
+- match: [sweet potato, shakarkand, shakarkandi, kumara]
+  tags: [sweet_potato]
+- match: [carrot, gajar, black carrot]
+  tags: [carrot]
+- match: [beetroot, beet, chukandar, beet root]
+  tags: [beetroot]
+- match: [beet sugar]
+  possible: [{tag: beetroot, likelihood: high}]
+  reason: Refined from sugar beet, which is a root.
+- match: [radish, mooli, muli, daikon]
+  tags: [radish]
+- match: [turnip, shalgam]
+  tags: [turnip]
+- match: [dry ginger, dried ginger, ginger powder, sonth, saunth, sunth, soonth, sounth]
+  tags: [ginger_dry]
+- match: [fresh ginger, ginger paste, ginger juice, adrak, green ginger]
+  tags: [ginger_fresh]
+- match: [ginger, ginger extract, ginger oleoresin]
+  possible:
+    - {tag: ginger_fresh, likelihood: medium}
+    - {tag: ginger_dry, likelihood: high}
+  reason: The label does not say whether the ginger is fresh or dried (sonth).
+- match: [ginger garlic paste]
+  tags: [ginger_fresh, garlic]
+- match: [turmeric, turmeric powder, haldi, dried turmeric, turmeric extract]
+  tags: [turmeric_dry]
+- match: [fresh turmeric, raw turmeric, kachi haldi, turmeric root, amba haldi]
+  tags: [turmeric_fresh]
+- match: [yam, suran, jimikand, elephant foot yam, ratalu]
+  tags: [yam]
+- match: [colocasia, arbi, arvi, taro]
+  tags: [colocasia]
+- match: [tapioca, cassava, sabudana, sago, tapioca starch, tapioca pearl, tapioca flour]
+  tags: [tapioca]
+- match: [arrowroot, ararot]
+  tags: [arrowroot]
+- match: [konjac, glucomannan, konjac gum]
+  tags: [konjac]
+- match: [chicory, chicory root, chicory root fibre]
+  tags: [chicory_root]
+- match: [inulin]
+  possible: [{tag: chicory_root, likelihood: medium}]
+  reason: Inulin is most commonly extracted from chicory root (also from agave).
+- match: [lotus root, lotus stem, kamal kakdi, bhein, nadru]
+  tags: [lotus_root]
+- match: [lotus seed, makhana, fox nut, phool makhana]
+- match: [horseradish, wasabi]
+  tags: [horseradish]
+
+# ============================ Spices & seasonings ============================
+- match: [asafoetida, asafetida, hing, heeng]
+  tags: [asafoetida]
+  possible: [{tag: wheat, likelihood: medium}]
+  reason: Compounded hing is commonly blended with wheat flour; some brands use rice flour or gum arabic.
+- match: [seasoning, tastemaker, taste maker, masala, spice mix, spice blend, seasoning powder, masala mix, premix, snack seasoning]
+  possible:
+    - {tag: onion, likelihood: medium}
+    - {tag: garlic, likelihood: medium}
+    - {tag: milk, likelihood: low}
+  reason: Savoury seasoning blends very often contain onion and garlic powder, sometimes milk solids. Under FSSAI rules a compound ingredient below 5% of the product need not list its sub-ingredients.
+- match: [spice, spices and condiment, condiment, mixed spice, spices and herb, whole spice]
+  possible:
+    - {tag: onion, likelihood: medium}
+    - {tag: garlic, likelihood: medium}
+    - {tag: ginger_dry, likelihood: low}
+  reason: Indian food standards class dehydrated onion and garlic as spices/condiments, so an unexplained "spices & condiments" may include them.
+- match: [curry powder, sambhar masala, sambar masala, pav bhaji masala, chole masala, biryani masala, kitchen king masala, meat masala]
+  possible:
+    - {tag: garlic, likelihood: medium}
+    - {tag: onion, likelihood: low}
+    - {tag: ginger_dry, likelihood: medium}
+  reason: Commercial curry spice blends frequently include garlic and dry ginger.
+- match: [garam masala, chaat masala, chat masala, panipuri masala, jaljeera]
+  possible:
+    - {tag: ginger_dry, likelihood: low}
+    - {tag: garlic, likelihood: low}
+  reason: Usually free of onion and garlic, but formulations vary by brand.
+- match: [mixed herb, italian herb, herb seasoning, oregano seasoning, pizza seasoning, peri peri, piri piri]
+  possible:
+    - {tag: garlic, likelihood: medium}
+    - {tag: onion, likelihood: medium}
+  reason: Western herb and peri-peri blends commonly include garlic and onion.
+- match: [chilli, red chilli, green chilli, chilli powder, chilli flake, mirch, lal mirch, hari mirch, kashmiri mirch, kashmiri chilli, paprika, capsicum, bell pepper, jalapeno, chipotle, cayenne]
+- match: [black pepper, white pepper, pepper, kali mirch, peppercorn]
+- match: [coriander, dhaniya, dhania, coriander leaf, cilantro, cumin, jeera, zeera, shahi jeera, caraway, fennel, saunf, cardamom, elaichi, black cardamom, clove, laung, lavang, cinnamon, dalchini, cassia, nutmeg, jaiphal, mace, javitri, bay leaf, tej patta, fenugreek, methi, kasuri methi, carom, ajwain, star anise, anise, aniseed, nigella, poppy seed, khus khus, khaskhas, amchur, amchoor, mango powder, dry mango, tamarind, imli, kokum, anardana, curry leaf, kadi patta, mint, pudina, spearmint, peppermint, menthol, oregano, basil, tulsi, thyme, rosemary, parsley, dill, sage, herb, saffron, kesar, vanilla, vanillin, edible camphor, citric acid, black salt, kala namak, rock salt, sendha namak, salt, iodised salt, sea salt, low sodium salt, free flowing iodised salt]
+- match: [onion seed, kalonji]
+  reason: Kalonji (nigella) is often mislabelled as "onion seed" but is not related to onion.
+- match: [vanilla extract]
+  possible: [{tag: alcohol, likelihood: low}]
+  reason: Vanilla extract is typically made with alcohol.
+
+# ============================ Generic / ambiguous ============================
+- match: [flavour, flavouring, added flavour, flavouring substance, natural flavour, natural flavouring, natural flavouring substance, natural and nature identical flavouring substance]
+  possible:
+    - {tag: onion, likelihood: low}
+    - {tag: garlic, likelihood: low}
+    - {tag: milk, likelihood: low}
+    - {tag: meat, likelihood: low}
+  reason: Unspecified flavourings can be derived from many sources, including onion/garlic extracts, dairy or meat.
+- match: [nature identical flavouring substance, artificial flavouring substance, artificial flavour, synthetic flavour, smoke flavour, permitted flavour]
+- match: [vegetable, mixed vegetable, dehydrated vegetable, dried vegetable, vegetable powder, vegetable extract, vegetable stock, vegetable broth, veggie]
+  possible:
+    - {tag: onion, likelihood: high}
+    - {tag: garlic, likelihood: medium}
+    - {tag: potato, likelihood: medium}
+    - {tag: carrot, likelihood: medium}
+  reason: Generic vegetable blends and stocks commonly include onion, garlic, carrot or potato.
+- match: [stock, broth, bouillon, stock powder, stock cube]
+  possible:
+    - {tag: meat, likelihood: medium}
+    - {tag: onion, likelihood: medium}
+    - {tag: garlic, likelihood: medium}
+  reason: Stocks are commonly meat-based and usually contain onion and garlic.
+- match: [hydrolysed vegetable protein, hydrolysed plant protein, hvp, textured vegetable protein, tvp]
+  possible:
+    - {tag: soy, likelihood: high}
+    - {tag: wheat, likelihood: medium}
+  reason: Usually made from soy, sometimes from wheat or maize.
+- match: [starch, edible starch, modified starch, native starch, food starch, modified food starch, edible modified starch]
+  possible:
+    - {tag: potato, likelihood: medium}
+    - {tag: tapioca, likelihood: medium}
+    - {tag: wheat, likelihood: low}
+  reason: The source plant is not stated; potato, tapioca, maize and wheat starches are all common.
+- match: [maltodextrin, dextrin]
+  possible:
+    - {tag: potato, likelihood: low}
+    - {tag: tapioca, likelihood: low}
+    - {tag: wheat, likelihood: low}
+  reason: Usually made from maize, but can be from potato, tapioca or wheat.
+- match: [corn starch, maize starch, cornflour, corn flour, rice starch, pea starch]
+- match: [emulsifier, emulsifying agent]
+  possible:
+    - {tag: animal_fat, likelihood: low}
+    - {tag: soy, likelihood: low}
+    - {tag: egg, likelihood: low}
+  reason: Unspecified emulsifiers may be soy/egg lecithin or fatty-acid esters of plant or animal origin.
+- match: [lecithin]
+  possible:
+    - {tag: soy, likelihood: high}
+    - {tag: egg, likelihood: low}
+  reason: Lecithin is usually from soy, sometimes sunflower or egg.
+- match: [soy lecithin, soya lecithin]
+  tags: [soy]
+- match: [sunflower lecithin, rapeseed lecithin]
+- match: [natural colour, permitted natural colour, natural food colour, plant colour, fruit and vegetable colour, vegetable colour]
+  possible:
+    - {tag: carmine, likelihood: medium}
+    - {tag: beetroot, likelihood: medium}
+    - {tag: carrot, likelihood: low}
+  reason: Natural red/pink colours are commonly beetroot red (INS 162), black carrot or carmine (INS 120, from insects).
+- match: [colour, food colour, permitted colour]
+  possible:
+    - {tag: carmine, likelihood: low}
+    - {tag: beetroot, likelihood: low}
+  reason: Colour source not stated.
+- match: [synthetic colour, permitted synthetic food colour, synthetic food colour, artificial colour, caramel colour]
+- match: [glazing agent, glaze, confectioners glaze]
+  possible:
+    - {tag: shellac, likelihood: medium}
+    - {tag: beeswax, likelihood: medium}
+  reason: Glazing agents are commonly shellac (lac insect) or beeswax; carnauba wax is plant-based.
+- match: [fat, edible fat, shortening, bakery shortening, edible oil and fat]
+  possible: [{tag: animal_fat, likelihood: low}]
+  reason: Fat source not stated.
+- match: [margarine, table spread, fat spread]
+  possible:
+    - {tag: milk, likelihood: medium}
+    - {tag: animal_fat, likelihood: low}
+  reason: Margarines and fat spreads often contain whey or milk solids.
+- match: [enzyme]
+  possible: [{tag: animal_derived, likelihood: low}]
+  reason: Enzymes can be microbial, plant or animal sourced.
+- match: [rennet]
+  possible: [{tag: animal_rennet, likelihood: medium}]
+  reason: Rennet can be animal (calf stomach) or microbial.
+- match: [microbial rennet, vegetable rennet, microbial enzyme, microbial coagulant]
+- match: [gum base, chewing gum base]
+  possible: [{tag: animal_derived, likelihood: low}]
+  reason: Gum bases can contain lanolin or other animal-derived waxes.
+- match: [l cysteine, cysteine]
+  possible: [{tag: animal_derived, likelihood: medium}]
+  reason: Often produced from feathers or hair; can also be made by fermentation.
+- match: [stearic acid, stearate, magnesium stearate, calcium stearate]
+  possible: [{tag: animal_fat, likelihood: medium}]
+  reason: Can be derived from animal fat or vegetable oil.
+- match: [glycerin, glycerol]
+  possible: [{tag: animal_fat, likelihood: low}]
+  reason: Usually from vegetable oil in India, but can be from animal fat.
+- match: [mono and diglyceride, mono and diglycerides of fatty acid, monoglyceride, diglyceride, mono and di glyceride]
+  possible: [{tag: animal_fat, likelihood: medium}]
+  reason: Mono- and diglycerides can be made from animal fat or vegetable oil.
+- match: [vitamin d3, cholecalciferol]
+  possible: [{tag: lanolin, likelihood: high}]
+  reason: Most vitamin D3 is made from lanolin (sheep wool grease); vegan D3 from lichen exists.
+- match: [omega 3, dha, epa]
+  possible: [{tag: fish, likelihood: medium}]
+  reason: Often from fish oil; can be from algae.
+- match: [flavour enhancer]
+  possible:
+    - {tag: meat, likelihood: low}
+    - {tag: fish, likelihood: low}
+    - {tag: yeast, likelihood: low}
+  reason: Unspecified flavour enhancers include nucleotides (INS 627/631/635) that can be meat-, fish- or yeast-derived.
+- match: [ketchup, tomato ketchup, tomato sauce, pizza sauce, pasta sauce, sauce, chutney, dip]
+  possible:
+    - {tag: onion, likelihood: high}
+    - {tag: garlic, likelihood: high}
+  reason: Most commercial tomato ketchups and sauces in India contain onion and garlic unless labelled otherwise.
+- match: [jain ketchup, jain sauce, no onion no garlic ketchup]
+- match: [mayonnaise, mayo]
+  possible: [{tag: egg, likelihood: high}]
+  reason: Traditional mayonnaise is made with egg yolk.
+- match: [eggless mayonnaise, veg mayonnaise, vegetarian mayonnaise, eggless mayo]
+- match: [pickle, achar, achaar]
+  possible: [{tag: garlic, likelihood: medium}, {tag: ginger_fresh, likelihood: medium}]
+  reason: Many Indian pickles include garlic or fresh ginger.
+- match: [bread crumb, breadcrumb, rusk crumb, panko]
+  tags: [wheat]
+  possible: [{tag: yeast, likelihood: high}]
+  reason: Breadcrumbs are made from leavened bread.
+- match: [bread, pav, bun, pizza base]
+  tags: [wheat]
+  possible: [{tag: yeast, likelihood: high}, {tag: milk, likelihood: low}]
+  reason: Bread is normally leavened with yeast.
+- match: [noodle, pasta, vermicelli, sevai, seviyan, macaroni, spaghetti]
+  possible: [{tag: wheat, likelihood: high}]
+  reason: Usually made from wheat flour.
+- match: [rice noodle, rice vermicelli, glass noodle]
+- match: [chocolate, compound chocolate, choco chip, chocolate chip, dark chocolate, choco]
+  possible: [{tag: milk, likelihood: medium}, {tag: soy, likelihood: low}]
+  reason: Chocolate and compound chocolate often contain milk solids and soy lecithin.
+- match: [butterscotch, toffee, caramel]
+  possible: [{tag: milk, likelihood: medium}]
+  reason: Butterscotch, toffee and caramel are commonly made with butter or milk.
+- match: [non dairy creamer, non dairy whitener, creamer]
+  possible: [{tag: milk, likelihood: high}]
+  reason: Many "non-dairy" creamers contain sodium caseinate, a milk protein.
+- match: [eggless, egg free, dairy free, vegan, plant based, jain]
+
+# ============================ Fermented & alcohol ============================
+- match: [mushroom, shiitake, button mushroom, morel, gucchi, truffle, mushroom extract, porcini, oyster mushroom]
+  tags: [mushroom]
+- match: [yeast, yeast extract, autolysed yeast, autolysed yeast extract, yeast powder, bakers yeast, nutritional yeast, torula yeast, active dry yeast, instant yeast]
+  tags: [yeast]
+- match: [vinegar, synthetic vinegar, spirit vinegar, white vinegar, apple cider vinegar, rice vinegar, distilled vinegar]
+  tags: [vinegar]
+- match: [malt vinegar]
+  tags: [vinegar, barley]
+- match: [wine vinegar, balsamic vinegar]
+  tags: [vinegar]
+  possible: [{tag: alcohol, likelihood: low}]
+  reason: Wine-based vinegars can retain traces of alcohol.
+- match: [soy sauce, soya sauce, shoyu, dark soy sauce, light soy sauce]
+  tags: [soy, fermented_product]
+  possible: [{tag: wheat, likelihood: high}]
+  reason: Most soy sauces are brewed with wheat; tamari is usually wheat-free.
+- match: [tamari, miso, tempeh, fermented soybean]
+  tags: [soy, fermented_product]
+- match: [alcohol, ethanol, ethyl alcohol, wine, red wine, white wine, rum, beer, brandy, whisky, whiskey, vodka, liqueur, sake, mirin, cooking wine, sherry]
+  tags: [alcohol]
+
+# ============================ Many-seeded ============================
+- match: [brinjal, eggplant, egg plant, aubergine, baingan, baigan]
+  tags: [brinjal]
+- match: [fig, anjeer, anjir]
+  tags: [fig]
+
+# ============================ Animal-derived ============================
+- match: [honey, shahad, madhu]
+  tags: [honey]
+- match: [beeswax, bees wax, royal jelly, propolis]
+  tags: [beeswax]
+- match: [carmine, cochineal, carminic acid, crimson lake, natural red 4]
+  tags: [carmine]
+- match: [shellac, lac]
+  tags: [shellac]
+- match: [gelatin, edible gelatin, beef gelatin, pork gelatin, fish gelatin]
+  tags: [gelatin]
+- match: [animal rennet, calf rennet]
+  tags: [animal_rennet]
+- match: [bone phosphate, bone char, bone ash, bone meal]
+  tags: [bone_phosphate]
+- match: [collagen, collagen peptide, hydrolysed collagen]
+  tags: [collagen]
+- match: [lanolin]
+  tags: [lanolin]
+- match: [isinglass]
+  tags: [isinglass]
+- match: [animal fat]
+  tags: [animal_fat]
+- match: [lard, pork fat, tallow, beef tallow, beef fat, suet, chicken fat, dripping]
+  tags: [meat, animal_fat]
+- match: [meat, chicken, mutton, lamb, beef, pork, ham, bacon, turkey, duck, goat meat, veal, sausage, pepperoni, salami, meat extract, chicken extract, chicken stock, chicken powder, beef extract, bone broth, keema, kheema]
+  tags: [meat]
+- match: [fish, anchovy, tuna, salmon, sardine, mackerel, cod, fish sauce, bonito, katsuobushi, dried fish, fish extract, fish oil, fish powder, surimi, bombay duck]
+  tags: [fish]
+- match: [shrimp, prawn, crab, lobster, krill, crayfish, crustacean, shrimp paste, prawn paste, dried shrimp]
+  tags: [crustacean]
+- match: [squid, octopus, oyster, oyster sauce, mussel, clam, scallop, snail, cuttlefish, mollusc]
+  tags: [mollusc]
+- match: [egg, egg white, egg yolk, egg powder, whole egg, egg solid, albumen, albumin, ovalbumin, lysozyme, meringue]
+  tags: [egg]
+- match: [milk, milk solid, milk powder, skimmed milk powder, skim milk powder, whole milk powder, dairy, cream, fresh cream, butter, butter oil, ghee, paneer, cottage cheese, curd, yogurt, dahi, buttermilk, chaas, whey, whey powder, whey protein, casein, caseinate, sodium caseinate, calcium caseinate, lactose, khoa, khoya, mawa, condensed milk, sweetened condensed milk, milk fat, butterfat, anhydrous milk fat, lactalbumin, lactoglobulin, malai, rabri, chhena, chenna, milk protein, milk protein concentrate, dairy whitener, sour cream, skim milk, toned milk, milk chocolate, kulfi, lassi, shrikhand]
+  tags: [milk]
+- match: [cheese, processed cheese, cheese powder, cheddar, mozzarella, parmesan]
+  tags: [milk]
+  possible: [{tag: animal_rennet, likelihood: low}]
+  reason: Cheese may be set with animal or microbial rennet; Indian vegetarian-marked cheese uses microbial rennet.
+
+# ============================ Dairy look-alikes (not dairy) ============================
+- match: [coconut, desiccated coconut, copra, coconut oil, nariyal, coconut water, coconut milk, coconut cream, coconut milk powder, coconut sugar]
+  tags: [coconut]
+- match: [almond milk]
+  tags: [tree_nut]
+- match: [soy milk, soya milk]
+  tags: [soy]
+- match: [oat milk]
+  tags: [oats]
+- match: [rice milk]
+- match: [peanut butter]
+  tags: [peanut]
+- match: [cocoa butter, shea butter, mango butter, kokum butter, cream of tartar, cocoa, cocoa solid, cocoa powder, cocoa mass, cocoa liquor, cacao]
+
+# ============================ Cereals & allergens ============================
+- match: [wheat, wheat flour, atta, maida, refined wheat flour, whole wheat, whole wheat flour, semolina, sooji, suji, rava, durum, durum wheat, durum wheat semolina, spelt, wheat gluten, gluten, vital wheat gluten, wheat starch, wheat fibre, wheat bran, bulgur, couscous, dalia, broken wheat, seitan, wheat protein, khapli]
+  tags: [wheat]
+- match: [barley, jau, malt, malt extract, barley malt, malted barley, malt flour]
+  tags: [barley]
+- match: [rye]
+  tags: [rye]
+- match: [oat, oatmeal, rolled oat, oat flour, oat bran]
+  tags: [oats]
+- match: [buckwheat, kuttu, kuttu atta]
+  tags: [buckwheat]
+- match: [peanut, groundnut, moongphali, mungfali, monkey nut]
+  tags: [peanut]
+- match: [groundnut oil, peanut oil, refined groundnut oil, refined peanut oil, filtered groundnut oil]
+  possible: [{tag: peanut, likelihood: low}]
+  reason: Highly refined peanut oil contains very little protein; cold-pressed/filtered oil may still trigger allergies.
+- match: [almond, badam, cashew, kaju, pistachio, pista, walnut, akhrot, hazelnut, pecan, macadamia, brazil nut, pine nut, chilgoza, chironji, charoli, nut, mixed nut, praline, marzipan, almond oil, almond flour, cashew paste]
+  tags: [tree_nut]
+- match: [soy, soya, soybean, soy protein, soya protein, soy protein isolate, soya chunk, soya bean, tofu, edamame, soy flour, soya flour]
+  tags: [soy]
+- match: [soybean oil, soya oil, soy oil, refined soyabean oil]
+  possible: [{tag: soy, likelihood: low}]
+  reason: Refined soybean oil contains very little soy protein.
+- match: [sesame, til, gingelly, sesame seed, sesame oil, gingelly oil, tahini, til oil]
+  tags: [sesame]
+- match: [mustard, sarson, rai, mustard oil, mustard seed, mustard powder, kasundi, mustard sauce, yellow mustard]
+  tags: [mustard]
+- match: [celery, celery seed, celery powder]
+  tags: [celery]
+- match: [lupin, lupine]
+  tags: [lupin]
+- match: [sulphite, sulphur dioxide, metabisulphite, potassium metabisulphite, sodium metabisulphite, bisulphite, sodium sulphite]
+  tags: [sulphite]
+
+# ============================ Known harmless ingredients ============================
+- match: [sugar, cane sugar, brown sugar, raw sugar, jaggery, gur, icing sugar, powdered sugar, invert sugar, invert syrup, liquid glucose, glucose, glucose syrup, dextrose, fructose, corn syrup, high fructose corn syrup, maple syrup, sugar syrup, khand, mishri, khandsari, date syrup, isomalt, maltitol, sorbitol, mannitol, xylitol, erythritol, sucralose, stevia, steviol glycoside, aspartame, acesulfame potassium, saccharin, sweetener, artificial sweetener]
+- match: [water, drinking water, ice]
+- match: [rice, rice flour, basmati rice, poha, flattened rice, beaten rice, puffed rice, murmura, kurmura, brown rice, rice flake, rice bran, broken rice, idli rava, rice rava]
+- match: [corn, maize, corn grit, sweet corn, cornmeal, maize flour, makki atta, corn flake, popcorn, baby corn]
+- match: [sorghum, jowar, bajra, pearl millet, millet, ragi, finger millet, nachni, foxtail millet, kodo millet, little millet, barnyard millet, samak, amaranth, rajgira, quinoa]
+- match: [gram flour, besan, chickpea, chickpea flour, chana, kabuli chana, kala chana, bengal gram, chana dal, roasted chana, green gram, moong, mung, moong dal, urad, urad dal, black gram, masoor, masoor dal, lentil, toor, toor dal, arhar, pigeon pea, moth bean, matki, moth, rajma, kidney bean, bean, black bean, pea, green pea, dried pea, yellow pea, lobia, cowpea, chawli, horse gram, kulthi, dal, pulse, legume, soaked dal]
+- match: [edible vegetable oil, vegetable oil, refined vegetable oil, palm oil, palm, palmolein, palmolein oil, refined palmolein, palm kernel oil, sunflower oil, refined sunflower oil, safflower oil, rice bran oil, cottonseed oil, cotton seed oil, cotton seed, cottonseed, refined cottonseed oil, corn oil, canola oil, rapeseed oil, olive oil, extra virgin olive oil, vegetable fat, edible vegetable fat, hydrogenated vegetable fat, hydrogenated vegetable oil, vanaspati, interesterified vegetable fat, partially hydrogenated vegetable oil, edible vegetable oil and fat, palm fat, fractionated palm oil, vegetable shortening, cocoa butter equivalent, flaxseed oil, avocado oil]
+- match: [tomato, tomato powder, tomato paste, tomato puree, tomato pulp, sun dried tomato, lemon, lemon juice, lemon powder, lime, lime juice, orange, orange peel]
+- match: [spinach, palak, cabbage, cauliflower, broccoli, cucumber, pumpkin, bottle gourd, lauki, ridge gourd, bitter gourd, karela, okra, bhindi, drumstick, moringa, french bean, cluster bean, gavar, zucchini, lettuce, kale, methi leaf, amaranth leaf, fenugreek leaf, olive, avocado, corn kernel, raw banana, plantain, raw mango, jackfruit, raw papaya]
+- match: [banana, apple, pineapple, strawberry, grape, raisin, kishmish, munakka, date, khajur, apricot, cranberry, blueberry, cherry, papaya, watermelon, melon, muskmelon, litchi, lychee, berry, mango, mango pulp, alphonso mango, guava, pomegranate, pear, peach, plum, kiwi, passion fruit, blackcurrant, mixed fruit, fruit, fruit pulp, fruit juice, fruit concentrate, tutti frutti, candied fruit, amla, jamun, sitaphal, chikoo, sapota, orange juice concentrate]
+- match: [sunflower seed, pumpkin seed, melon seed, magaj, watermelon seed, flax seed, flaxseed, alsi, chia seed, basil seed, sabja, hemp seed]
+- match: [tea, tea leaf, green tea, coffee, chicory free coffee, instant coffee, coffee bean, cardamom tea]
+- match: [baking soda, sodium bicarbonate, sodium hydrogen carbonate, baking powder, ammonium bicarbonate, ammonium hydrogen carbonate, raising agent, leavening agent, acidity regulator, antioxidant, preservative, class ii preservative, stabiliser, thickener, thickening agent, gelling agent, anticaking agent, anti caking agent, humectant, firming agent, bulking agent, flour treatment agent, improver, flour improver, carbonation, carbon dioxide, nitrogen, packed in nitrogen]
+- match: [guar gum, xanthan gum, gum arabic, acacia gum, agar, agar agar, china grass, pectin, carrageenan, cellulose, microcrystalline cellulose, carboxymethyl cellulose, locust bean gum, gellan gum, sodium alginate, alginate, psyllium, isabgol, gum, edible gum, gond, tragacanth, gum karaya]
+- match: [malic acid, tartaric acid, acetic acid, lactic acid, ascorbic acid, vitamin c, fumaric acid, phosphoric acid, sodium citrate, calcium citrate, potassium citrate, trisodium citrate, sodium benzoate, potassium sorbate, sorbic acid, benzoic acid, calcium propionate, sodium propionate, tbhq, bha, bht, tocopherol, vitamin e, rosemary extract, sodium acetate, sodium diacetate, calcium lactate, sodium lactate, citric acid monohydrate, glucono delta lactone]
+- match: [vitamin, vitamin a, vitamin b1, vitamin b2, vitamin b6, vitamin b12, vitamin d, vitamin d2, ergocalciferol, vitamin k, niacin, niacinamide, folic acid, thiamine, riboflavin, biotin, pantothenic acid, mineral, iron, ferrous sulphate, ferric pyrophosphate, zinc, zinc oxide, calcium, calcium carbonate, calcium phosphate, tricalcium phosphate, dicalcium phosphate, magnesium, potassium, potassium chloride, sodium, iodine, potassium iodate, selenium, electrolyte, ferrous fumarate, sodium iron edta, premix of vitamin and mineral, vitamin premix, mineral premix]
+- match: [monosodium glutamate, msg, sodium chloride, calcium chloride, magnesium carbonate, silicon dioxide, silica, titanium dioxide, sodium aluminium phosphate, sodium acid pyrophosphate, disodium diphosphate, tetrasodium pyrophosphate, sodium tripolyphosphate, sodium hexametaphosphate, polyphosphate, trisodium phosphate, potassium carbonate, sodium carbonate, sodium hydroxide, calcium hydroxide, lime water, chuna, edible lime, propylene glycol, triacetin, dimethylpolysiloxane, paraffin, carnauba wax, candelilla wax, beta carotene, annatto, paprika extract, paprika oleoresin, lycopene, chlorophyll, spirulina, spirulina extract, tartrazine, sunset yellow, sunset yellow fcf, carmoisine, ponceau 4r, allura red, erythrosine, brilliant blue, brilliant blue fcf, indigo carmine, fast green, quinoline yellow, iron oxide]
+- match: [curcumin]
+  possible: [{tag: turmeric_dry, likelihood: high}]
+  reason: Curcumin (INS 100) is usually extracted from dried turmeric.
+- match: [beetroot red, betanin, beet red]
+  tags: [beetroot]
+- match: [anthocyanin]
+  possible: [{tag: carrot, likelihood: low}, {tag: sweet_potato, likelihood: low}]
+  reason: Anthocyanin colours are often from black carrot or purple sweet potato, as well as grapes.
+- match: [rice bran wax, sunflower wax, soy wax]
+- match: [protein, plant protein, pea protein, rice protein, fibre, dietary fibre, polydextrose, resistant dextrin, soluble fibre, prebiotic, probiotic, lactobacillus, bifidobacterium, culture, active culture]
+- match: [oligofructose, fructooligosaccharide, fos]
+  possible: [{tag: chicory_root, likelihood: medium}]
+  reason: Oligofructose/FOS is commonly derived from chicory root inulin.

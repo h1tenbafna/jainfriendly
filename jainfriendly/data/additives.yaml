@@ -1,0 +1,185 @@
+# Food additives by INS number (International Numbering System, used on Indian labels as
+# "INS 471" and on European labels as "E471").
+#
+# Keys may list several numbers separated by commas. A key with a letter (160a) is tried
+# before the bare number (160). Only additives that can be animal-, insect-, root- or
+# allergen-derived carry tags; the rest are listed as known so we can report full recognition.
+#
+# Sources: Codex Alimentarius CAC/GL 36-1989 (Class Names and the International Numbering
+# System for Food Additives); FSSAI Food Products Standards & Food Additives Regulations.
+
+"100":  {name: Curcumin, possible: [{tag: turmeric_dry, likelihood: high}], reason: "Usually extracted from dried turmeric."}
+"101":  {name: Riboflavin}
+"102":  {name: Tartrazine}
+"104":  {name: Quinoline yellow}
+"110":  {name: Sunset yellow FCF}
+"120":  {name: Carmine (cochineal), tags: [carmine]}
+"122":  {name: Carmoisine}
+"123":  {name: Amaranth (colour)}
+"124":  {name: Ponceau 4R}
+"127":  {name: Erythrosine}
+"129":  {name: Allura red AC}
+"132":  {name: Indigotine (synthetic)}
+"133":  {name: Brilliant blue FCF}
+"140":  {name: Chlorophylls}
+"141":  {name: Copper chlorophyll}
+"143":  {name: Fast green FCF}
+"150a": {name: Plain caramel}
+"150b": {name: Caustic sulphite caramel}
+"150c": {name: Ammonia caramel}
+"150d": {name: Sulphite ammonia caramel}
+"150":  {name: Caramel colour}
+"153":  {name: Vegetable carbon}
+"160a": {name: Beta-carotene, possible: [{tag: carrot, likelihood: low}], reason: "Usually synthetic or from algae/palm oil; can be extracted from carrots."}
+"160b": {name: Annatto}
+"160c": {name: Paprika extract}
+"160d": {name: Lycopene}
+"160e": {name: Beta-apo-8'-carotenal}
+"161b": {name: Lutein}
+"162":  {name: Beetroot red (betanin), tags: [beetroot]}
+"163":  {name: Anthocyanins, possible: [{tag: carrot, likelihood: low}, {tag: sweet_potato, likelihood: low}], reason: "Commonly from black carrot or purple sweet potato, as well as grape skins."}
+"170":  {name: Calcium carbonate}
+"171":  {name: Titanium dioxide}
+"172":  {name: Iron oxides}
+"200":  {name: Sorbic acid}
+"202":  {name: Potassium sorbate}
+"210":  {name: Benzoic acid}
+"211":  {name: Sodium benzoate}
+"220,221,222,223,224,225,226,227,228": {name: Sulphur dioxide / sulphites, tags: [sulphite]}
+"234":  {name: Nisin}
+"235":  {name: Natamycin}
+"260":  {name: Acetic acid}
+"262":  {name: Sodium acetates}
+"270":  {name: Lactic acid}
+"280":  {name: Propionic acid}
+"281":  {name: Sodium propionate}
+"282":  {name: Calcium propionate}
+"290":  {name: Carbon dioxide}
+"296":  {name: Malic acid}
+"297":  {name: Fumaric acid}
+"300":  {name: Ascorbic acid}
+"301":  {name: Sodium ascorbate}
+"304":  {name: Ascorbyl palmitate}
+"306,307,308,309": {name: Tocopherols}
+"310":  {name: Propyl gallate}
+"319":  {name: TBHQ}
+"320":  {name: BHA}
+"321":  {name: BHT}
+"322":  {name: Lecithins, possible: [{tag: soy, likelihood: high}, {tag: egg, likelihood: low}], reason: "Usually from soy, sometimes sunflower or egg."}
+"325,326,327": {name: Lactates}
+"330":  {name: Citric acid}
+"331":  {name: Sodium citrates}
+"332":  {name: Potassium citrates}
+"333":  {name: Calcium citrates}
+"334":  {name: Tartaric acid}
+"335,336,337": {name: Tartrates}
+"338":  {name: Phosphoric acid}
+"339":  {name: Sodium phosphates}
+"340":  {name: Potassium phosphates}
+"341":  {name: Calcium phosphates}
+"343":  {name: Magnesium phosphates}
+"350,351,352": {name: Malates}
+"400":  {name: Alginic acid}
+"401":  {name: Sodium alginate}
+"402":  {name: Potassium alginate}
+"404":  {name: Calcium alginate}
+"406":  {name: Agar}
+"407":  {name: Carrageenan}
+"410":  {name: Locust bean gum}
+"412":  {name: Guar gum}
+"413":  {name: Tragacanth}
+"414":  {name: Gum arabic}
+"415":  {name: Xanthan gum}
+"416":  {name: Karaya gum}
+"418":  {name: Gellan gum}
+"405":  {name: Propylene glycol alginate}
+"417":  {name: Tara gum}
+"419":  {name: Gum ghatti}
+"424":  {name: Curdlan}
+"427":  {name: Cassia gum}
+"420":  {name: Sorbitol}
+"421":  {name: Mannitol}
+"422":  {name: Glycerol, possible: [{tag: animal_fat, likelihood: low}], reason: "Usually from vegetable oil, but can be from animal fat."}
+"425":  {name: Konjac, tags: [konjac]}
+"440":  {name: Pectins}
+"432,433,434,435,436": {name: Polysorbates, possible: [{tag: animal_fat, likelihood: medium}], reason: "Made with fatty acids that can come from animal fat or vegetable oil."}
+"442":  {name: Ammonium phosphatides}
+"444":  {name: Sucrose acetate isobutyrate}
+"445":  {name: Glycerol esters of wood rosin}
+"450":  {name: Diphosphates}
+"451":  {name: Triphosphates}
+"452":  {name: Polyphosphates}
+"460":  {name: Cellulose}
+"461,463,464,465": {name: Modified celluloses}
+"466":  {name: Carboxymethyl cellulose}
+"470":  {name: Salts of fatty acids, possible: [{tag: animal_fat, likelihood: medium}], reason: "Fatty acids can come from animal fat or vegetable oil."}
+"471":  {name: Mono- and diglycerides of fatty acids, possible: [{tag: animal_fat, likelihood: medium}], reason: "Can be made from animal fat or vegetable oil."}
+"472a,472b,472c,472d,472e,472f,472": {name: Esters of mono- and diglycerides, possible: [{tag: animal_fat, likelihood: medium}], reason: "Can be made from animal fat or vegetable oil."}
+"473":  {name: Sucrose esters of fatty acids, possible: [{tag: animal_fat, likelihood: low}], reason: "Fatty acids can come from animal fat or vegetable oil."}
+"475":  {name: Polyglycerol esters of fatty acids, possible: [{tag: animal_fat, likelihood: medium}], reason: "Fatty acids can come from animal fat or vegetable oil."}
+"476":  {name: Polyglycerol polyricinoleate (castor oil)}
+"477":  {name: Propylene glycol esters of fatty acids, possible: [{tag: animal_fat, likelihood: low}], reason: "Fatty acids can come from animal fat or vegetable oil."}
+"481":  {name: Sodium stearoyl lactylate, possible: [{tag: animal_fat, likelihood: medium}], reason: "Stearic acid can come from animal fat or vegetable oil."}
+"482":  {name: Calcium stearoyl lactylate, possible: [{tag: animal_fat, likelihood: medium}], reason: "Stearic acid can come from animal fat or vegetable oil."}
+"491,492,493,494,495": {name: Sorbitan esters, possible: [{tag: animal_fat, likelihood: medium}], reason: "Fatty acids can come from animal fat or vegetable oil."}
+"500":  {name: Sodium carbonates}
+"501":  {name: Potassium carbonates}
+"503":  {name: Ammonium carbonates}
+"504":  {name: Magnesium carbonates}
+"507":  {name: Hydrochloric acid}
+"508":  {name: Potassium chloride}
+"509":  {name: Calcium chloride}
+"511":  {name: Magnesium chloride}
+"516":  {name: Calcium sulphate}
+"524":  {name: Sodium hydroxide}
+"526":  {name: Calcium hydroxide}
+"529":  {name: Calcium oxide}
+"530":  {name: Magnesium oxide}
+"535,536,538": {name: Ferrocyanides}
+"541":  {name: Sodium aluminium phosphate}
+"542":  {name: Bone phosphate, tags: [bone_phosphate]}
+"551":  {name: Silicon dioxide}
+"552":  {name: Calcium silicate}
+"553":  {name: Magnesium silicate / talc}
+"554":  {name: Sodium aluminosilicate}
+"570":  {name: Stearic acid, possible: [{tag: animal_fat, likelihood: medium}], reason: "Can be derived from animal fat or vegetable oil."}
+"572":  {name: Magnesium stearate, possible: [{tag: animal_fat, likelihood: medium}], reason: "Can be derived from animal fat or vegetable oil."}
+"575":  {name: Glucono delta-lactone}
+"620":  {name: Glutamic acid}
+"621":  {name: Monosodium glutamate}
+"627":  {name: Disodium guanylate, possible: [{tag: fish, likelihood: medium}, {tag: yeast, likelihood: medium}, {tag: meat, likelihood: low}], reason: "Produced from yeast extract, dried fish (sardine) or by fermentation."}
+"631":  {name: Disodium inosinate, possible: [{tag: meat, likelihood: medium}, {tag: fish, likelihood: medium}], reason: "Traditionally from meat or fish; also made by fermentation of starch/sugar."}
+"635":  {name: Disodium 5'-ribonucleotides, possible: [{tag: meat, likelihood: medium}, {tag: fish, likelihood: medium}, {tag: yeast, likelihood: medium}], reason: "Mixture of 627 and 631; may be meat-, fish- or yeast-derived."}
+"900":  {name: Dimethylpolysiloxane}
+"901":  {name: Beeswax, tags: [beeswax]}
+"903":  {name: Carnauba wax}
+"904":  {name: Shellac, tags: [shellac]}
+"905":  {name: Paraffin / microcrystalline wax}
+"920":  {name: L-cysteine, possible: [{tag: animal_derived, likelihood: medium}], reason: "Often produced from feathers or hair; can also be made by fermentation."}
+"941":  {name: Nitrogen}
+"950":  {name: Acesulfame potassium}
+"951":  {name: Aspartame}
+"952":  {name: Cyclamate}
+"954":  {name: Saccharin}
+"955":  {name: Sucralose}
+"960":  {name: Steviol glycosides}
+"961":  {name: Neotame}
+"965":  {name: Maltitol}
+"966":  {name: Lactitol, tags: [milk]}
+"967":  {name: Xylitol}
+"968":  {name: Erythritol}
+"1100": {name: Amylase, possible: [{tag: animal_derived, likelihood: low}], reason: "Enzymes can be microbial, plant or animal sourced."}
+"1101": {name: Proteases, possible: [{tag: animal_derived, likelihood: low}], reason: "Enzymes can be microbial, plant or animal sourced."}
+"1104": {name: Lipases, possible: [{tag: animal_derived, likelihood: medium}], reason: "Lipases are often from animal (pancreatic/pregastric) tissue."}
+"1105": {name: Lysozyme, tags: [egg]}
+"1200": {name: Polydextrose}
+"1201": {name: Polyvinylpyrrolidone}
+"1202": {name: Polyvinylpolypyrrolidone}
+"1400,1401,1402,1403,1404,1405,1410,1412,1413,1414,1420,1422,1440,1442,1450,1451,1452":
+  name: Modified starch
+  possible: [{tag: potato, likelihood: medium}, {tag: tapioca, likelihood: medium}, {tag: wheat, likelihood: low}]
+  reason: Source plant not stated; potato, tapioca, maize and wheat starches are all common.
+"1505": {name: Triethyl citrate}
+"1510": {name: Ethanol, tags: [alcohol]}
+"1518": {name: Triacetin}
+"1520": {name: Propylene glycol}

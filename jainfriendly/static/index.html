@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JainFriendly Checker</title>
+<style>
+  :root {
+    --bg: #faf8f4; --card: #ffffff; --ink: #1d1b18; --muted: #6b665e; --line: #e6e1d8;
+    --ok: #1f7a4d; --ok-bg: #e5f4ec; --likely: #3a7d2c; --likely-bg: #eef6e8;
+    --warn: #8a5a00; --warn-bg: #fdf1d8; --bad: #a12a2a; --bad-bg: #fbe7e7; --accent: #c2541b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #161513; --card: #201f1c; --ink: #eeeae3; --muted: #a39d93; --line: #35322d;
+      --ok: #6fd3a0; --ok-bg: #173527; --likely: #9ad57f; --likely-bg: #1f3318;
+      --warn: #f0c060; --warn-bg: #3a2e12; --bad: #f08a8a; --bad-bg: #3c1c1c; --accent: #f08a4b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  textarea { width: 100%; min-height: 150px; padding: 12px; border-radius: 10px;
+             border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 12px 0; }
+  label { color: var(--muted); font-size: .95rem; }
+  button { background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 10px 18px;
+           font: inherit; font-weight: 600; cursor: pointer; }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); font-weight: 500; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 16px; }
+  .verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .v { border-radius: 10px; padding: 12px; }
+  .v h3 { margin: 0 0 4px; font-size: 1rem; }
+  .v p { margin: 2px 0; font-size: .88rem; }
+  .friendly { background: var(--ok-bg); color: var(--ok); }
+  .likely_friendly { background: var(--likely-bg); color: var(--likely); }
+  .unclear { background: var(--warn-bg); color: var(--warn); }
+  .not_friendly { background: var(--bad-bg); color: var(--bad); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 12px; }
+  .chip { border-radius: 999px; padding: 3px 10px; font-size: .85rem; border: 1px solid var(--line); cursor: help; }
+  .chip.present { background: var(--card); color: var(--ink); font-weight: 500; }
+  .chip.present.bad { background: var(--bad-bg); color: var(--bad); border-color: transparent; }
+  .chip.possible { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+  .chip.trace { color: var(--muted); }
+  .chip.absent { background: var(--ok-bg); color: var(--ok); border-color: transparent; }
+  h2 { font-size: 1.05rem; margin: 0 0 4px; }
+  .muted { color: var(--muted); font-size: .88rem; }
+  details { margin-top: 8px; }
+  summary { cursor: pointer; color: var(--muted); }
+  .opts { font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>JainFriendly checker</h1>
+  <p class="sub">Paste the ingredient list from a pack or product page. We show what's inside, what might be hidden, and whether it suits your diet.</p>
+
+  <textarea id="text" placeholder="Ingredients: Potato, Edible Vegetable Oil, Seasoning (Salt, Onion Powder, ...)"></textarea>
+
+  <div class="row">
+    <label><input type="checkbox" class="prof" value="jain" checked> Jain</label>
+    <label><input type="checkbox" class="prof" value="vegetarian" checked> Vegetarian</label>
+    <label><input type="checkbox" class="prof" value="vegan" checked> Vegan</label>
+    <label>Allergies:
+      <select id="allergen">
+        <option value="">none</option>
+      </select>
+    </label>
+    <label>Pack mark:
+      <select id="mark"><option value="">unknown</option><option value="green">green dot (veg)</option><option value="brown">brown dot (non-veg)</option></select>
+    </label>
+  </div>
+  <details class="opts"><summary>My Jain preferences</summary>
+    <div class="row" id="jainopts"></div>
+  </details>
+  <div class="row">
+    <button id="go">Check</button>
+    <button class="ghost" data-sample="0">Sample: masala chips</button>
+    <button class="ghost" data-sample="1">Sample: Jain bhujia</button>
+    <button class="ghost" data-sample="2">Sample: cream biscuit</button>
+  </div>
+
+  <div id="out"></div>
+</main>
+<script>
+const SAMPLES = [
+  "Ingredients: Potato (58%), Edible Vegetable Oil (Palmolein, Rice Bran Oil), Seasoning (Sugar, Iodised Salt, Spices & Condiments (Onion Powder, Garlic Powder, Chilli Powder, Coriander, Ginger Powder), Milk Solids, Tomato Powder, Flavour Enhancers (INS 627, INS 631), Acidity Regulator (INS 330)). Contains Added Flavour (Natural and Nature Identical Flavouring Substances). Allergen advice: Contains milk. May contain traces of peanut.",
+  "Ingredients: Gram Flour (Besan), Edible Vegetable Oil (Cottonseed Oil), Moth Bean Flour, Iodised Salt, Spices (Red Chilli, Black Pepper, Dry Ginger, Cardamom, Clove, Turmeric), Asafoetida.",
+  "Ingredients: Refined Wheat Flour (Maida), Sugar, Edible Vegetable Fat (Palm), Invert Sugar Syrup, Cocoa Solids (4%), Milk Solids, Raising Agents [503(ii), 500(ii)], Emulsifiers [322, 471], Iodised Salt, Colour (INS 150d), Artificial Flavouring Substances (Vanilla, Chocolate). Contains wheat, milk, soy."
+];
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let JAIN_OPTS = [];
+
+fetch("/v1/profiles").then(r => r.json()).then(ps => {
+  for (const p of ps) {
+    if (p.id.startsWith("allergen:")) {
+      $("#allergen").insertAdjacentHTML("beforeend", `<option value="${esc(p.id)}">${esc(p.name)}</option>`);
+    }
+    if (p.id === "jain") {
+      JAIN_OPTS = p.options;
+      $("#jainopts").innerHTML = p.options.map(o =>
+        `<label><input type="checkbox" class="jopt" value="${esc(o.id)}" ${o.default ? "checked" : ""}> ${esc(o.label)}</label>`).join("");
+    }
+  }
+});
+
+document.querySelectorAll("[data-sample]").forEach(b => b.onclick = () => { $("#text").value = SAMPLES[b.dataset.sample]; run(); });
+$("#go").onclick = run;
+
+function chip(t, cls, bad) {
+  if (bad && bad.has(t.id)) cls += " bad";
+  const why = t.evidence.map(e => `${e.ingredient}${e.reason ? " — " + e.reason : ""}`).join("\n");
+  const extra = t.status === "possible" ? ` (${t.likelihood})` : "";
+  return `<span class="chip ${cls}" title="${esc(why)}">${esc(t.label)}${extra}</span>`;
+}
+
+async function run() {
+  const profiles = [...document.querySelectorAll(".prof:checked")].map(c => c.value).map(id => {
+    if (id !== "jain") return id;
+    const options = {};
+    document.querySelectorAll(".jopt").forEach(c => options[c.value] = c.checked);
+    return { id, options };
+  });
+  if ($("#allergen").value) profiles.push($("#allergen").value);
+  const body = { ingredients: $("#text").value, profiles, veg_mark: $("#mark").value || null };
+  const res = await fetch("/v1/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const d = await res.json();
+  if (!res.ok) { $("#out").innerHTML = `<div class="card">${esc(JSON.stringify(d.detail))}</div>`; return; }
+
+  const verdicts = d.profiles.map(p => {
+    const lines = [
+      ...p.violations.map(v => `Contains ${v.label}`),
+      ...p.uncertain.map(u => `Maybe ${u.label}`),
+      ...p.allowed_by_preference.map(a => `Has ${a.label} (you allow it)`),
+    ].slice(0, 5);
+    return `<div class="v ${p.verdict}"><h3>${esc(p.headline)}</h3>${lines.map(l => `<p>${esc(l)}</p>`).join("")}</div>`;
+  }).join("");
+
+  const tags = d.tags;
+  const by = (s) => tags.filter(t => t.status === s);
+  const bad = new Set(d.profiles.flatMap(p => p.violations.map(v => v.id)));
+  const section = (title, list, cls, hint) => list.length ? `<h2>${title}</h2><p class="muted">${hint}</p><div class="chips">${list.map(t => chip(t, cls, bad)).join("")}</div>` : "";
+  const notDetected = [...new Set(d.profiles.flatMap(p => p.not_detected))];
+
+  const caveats = [...new Set(d.profiles.flatMap(p => p.caveats))];
+  $("#out").innerHTML = `
+    <div class="card"><div class="verdicts">${verdicts}</div></div>
+    <div class="card">
+      ${section("Contains", by("present"), "present", "Listed on the label. Red = conflicts with a diet you selected. Hover a tag to see which ingredient it came from.")}
+      ${section("Might contain", by("possible"), "possible", "Could be hidden inside a generic ingredient (seasoning, flavour, additive).")}
+      ${section("May contain traces", by("trace"), "trace", "Cross-contact declared by the manufacturer.")}
+      ${notDetected.length ? `<details><summary><b>Not detected</b> (${notDetected.length} things your diets avoid)</summary><div class="chips">${notDetected.map(l => `<span class="chip absent">${esc(l)}</span>`).join("")}</div></details>` : ""}
+      ${caveats.length ? `<details open><summary>Notes</summary><ul>${caveats.map(c => `<li class="muted">${esc(c)}</li>`).join("")}</ul></details>` : ""}
+      ${d.warnings.length ? `<ul>${d.warnings.map(w => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}
+      <p class="muted">${esc(d.disclaimer)}</p>
+    </div>`;
+}
+</script>
+</body>
+</html>
