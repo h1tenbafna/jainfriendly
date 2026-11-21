@@ -147,3 +147,23 @@ def test_catalog_api(cat):
     assert any(p["id"] == "zepto" for p in client.get("/v1/platforms").json())
     assert "JainFriendly" in client.get("/").text
     assert "checker" in client.get("/check").text
+
+
+def test_snapshot_roundtrip(cat, tmp_path):
+    add(cat, "Masala chips", CHIPS, "8901111111111", offers=[RawOffer("zepto", price=20, location="400001")])
+    add(cat, "Bhujia", BHUJIA, None)
+    snap = tmp_path / "snap.jsonl.gz"
+    assert cat.export_snapshot(snap) == 2
+    other = Catalog(tmp_path / "other.db")
+    assert other.load_snapshot(snap) == 2
+    items = {i["name"]: i for i in other.search()["items"]}
+    assert items["Masala chips"]["offers"][0]["platform"] == "zepto"
+    assert items["Bhujia"]["verdicts"]["jain"] == "friendly"
+
+
+def test_barcode_lookup_api(cat):
+    add(cat, "Masala chips", CHIPS, "8901111111111")
+    api.set_catalog(cat)
+    client = TestClient(api.app)
+    assert client.get("/v1/products/barcode/08901111111111").json()["name"] == "Masala chips"
+    assert client.get("/v1/products/barcode/123").status_code == 404

@@ -45,8 +45,16 @@ Verdicts: `friendly` · `likely_friendly` (only low-likelihood possibilities, tr
 ## Quick start
 
 ```bash
+scripts/setup.sh     # local venv + deps; builds data/catalog.db from the committed seed snapshot
+scripts/run.sh       # http://localhost:8000
+```
+
+Manually:
+
+```bash
 pip install -e ".[dev]"
-python -m jainfriendly.catalog sync-off --pages 10     # import ~1,000 Indian products from Open Food Facts
+python -m jainfriendly.catalog load seed/catalog.jsonl.gz       # ~940 products, offline
+python -m jainfriendly.catalog sync-off --pages 10     # or import fresh from Open Food Facts
 python -m jainfriendly.catalog import-feed offers.csv --platform blinkit   # add store offers
 uvicorn jainfriendly.api:app                            # http://localhost:8000 (catalogue), /check, /docs
 pytest

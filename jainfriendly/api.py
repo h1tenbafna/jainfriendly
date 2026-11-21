@@ -4,6 +4,7 @@
 
 GET  /v1/products       browse the catalogue: search + diet / allergen / tag / platform filters
 GET  /v1/products/{id}  one product with full analysis and where to buy
+GET  /v1/products/barcode/{gtin}  look up a scanned barcode
 GET  /v1/catalog        catalogue facets (categories, platforms, verdict counts)
 GET  /v1/platforms      supported platforms
 POST /v1/analyze        analyse ingredient text directly
@@ -192,6 +193,18 @@ def list_products(
         raise HTTPException(status_code=422, detail=str(exc.args[0])) from exc
     res["attribution"] = ATTRIBUTION
     return res
+
+
+@app.get("/v1/products/barcode/{gtin}")
+def get_product_by_barcode(gtin: str) -> dict:
+    """For barcode scanning in the mobile app."""
+    with _lock:
+        product = get_catalog().get_by_gtin(gtin)
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not in catalogue yet")
+    product["attribution"] = ATTRIBUTION
+    product["disclaimer"] = DISCLAIMER
+    return product
 
 
 @app.get("/v1/products/{product_id}")

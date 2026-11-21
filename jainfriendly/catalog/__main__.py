@@ -6,6 +6,8 @@
     python -m jainfriendly.catalog reanalyze                 # after editing data/*.yaml
     python -m jainfriendly.catalog stats
     python -m jainfriendly.catalog todo                      # most common unrecognised ingredients
+    python -m jainfriendly.catalog export seed/catalog.jsonl.gz   # portable snapshot
+    python -m jainfriendly.catalog load seed/catalog.jsonl.gz     # rebuild a database from it
 """
 
 from __future__ import annotations
@@ -37,6 +39,10 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("stats")
     t = sub.add_parser("todo", help="most common unrecognised ingredients")
     t.add_argument("-n", type=int, default=40)
+    e = sub.add_parser("export", help="write all products and offers to a .jsonl(.gz) snapshot")
+    e.add_argument("path")
+    ld = sub.add_parser("load", help="load a snapshot written by 'export'")
+    ld.add_argument("path")
     args = ap.parse_args(argv)
 
     cat = Catalog(args.db)
@@ -69,6 +75,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Re-analysed {cat.reanalyze(args.all)} products.")
     elif args.cmd == "stats":
         print(json.dumps(cat.facets(), indent=2))
+    elif args.cmd == "export":
+        print(f"Exported {cat.export_snapshot(args.path)} products to {args.path}.")
+    elif args.cmd == "load":
+        print(f"Loaded {cat.load_snapshot(args.path)} products from {args.path}.")
     elif args.cmd == "todo":
         for text, count in cat.top_unrecognized(args.n):
             print(f"{count:5d}  {text}")

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import re
@@ -13,7 +14,7 @@ from ..analyzer import Analyzer
 from ..knowledge import DATA_DIR, get_knowledge
 from ..profiles import VERDICT_RANK, evaluate
 from .db import connect
-from .models import RawProduct
+from .models import RawOffer, RawProduct
 from .platforms import platform_name
 
 NO_DATA = "no_data"
@@ -281,6 +282,11 @@ class Catalog:
         ).fetchall()
         return {"total": total, "items": [self._summary(r) for r in rows]}
 
+    def get_by_gtin(self, gtin: str) -> dict | None:
+        code = clean_gtin(gtin)
+        row = self.conn.execute("SELECT id FROM products WHERE gtin = ?", (code,)).fetchone() if code else None
+        return self.get(row["id"]) if row else None
+
     def get(self, pid: int) -> dict | None:
         row = self.conn.execute("SELECT * FROM products WHERE id = ?", (pid,)).fetchone()
         if row is None:
@@ -379,3 +385,50 @@ class Catalog:
                 leaf = path.split(" › ")[-1].strip().lower()
                 counts[leaf] = counts.get(leaf, 0) + 1
         return sorted(counts.items(), key=lambda kv: -kv[1])[:limit]
+
+
+    # ------------------------------------------------------------------ snapshots
+    def export_snapshot(self, path: str | Path) -> int:
+        """Write every product (as its source reported it) plus offers, one JSON per line.
+        Analysis is not stored: it is recomputed on load with the current knowledge base."""
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        opener = gzip.open if path.suffix == ".gz" else open
+        n = 0
+        with opener(path, "wt", encoding="utf-8") as fh:
+            for r in self.conn.execute("SELECT * FROM products ORDER BY id"):
+                offers = [
+                    dict(o) for o in self.conn.execute(
+                        "SELECT platform, platform_product_id, url, price, mrp, in_stock, location "
+                        "FROM offers WHERE product_id = ?", (r["id"],)
+                    )
+                ]
+                doc = {
+                    "source": r["ingredients_source"] or r["source"], "source_id": r["source_id"],
+                    "source_url": r["source_url"], "name": r["name"], "brand": r["brand"],
+                    "quantity": r["quantity"], "gtin": r["gtin"],
+                    "ingredients_text": r["ingredients_text"],
+                    "categories": json.loads(r["categories"] or "[]"), "image_url": r["image_url"],
+                    "ingredients_image_url": r["ingredients_image_url"], "veg_mark": r["veg_mark"],
+                    "offers": offers,
+                }
+                fh.write(json.dumps(doc, ensure_ascii=False) + "\n")
+                n += 1
+        return n
+
+    def load_snapshot(self, path: str | Path) -> int:
+        path = Path(path)
+        opener = gzip.open if path.suffix == ".gz" else open
+        n = 0
+        with opener(path, "rt", encoding="utf-8") as fh:
+            for line in fh:
+                if not line.strip():
+                    continue
+                d = json.loads(line)
+                offers = [
+                    RawOffer(**{**o, "in_stock": None if o.get("in_stock") is None else bool(o["in_stock"])})
+                    for o in d.pop("offers", [])
+                ]
+                self.upsert(RawProduct(**d, offers=offers))
+                n += 1
+        return n
