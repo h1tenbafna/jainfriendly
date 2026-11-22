@@ -21,7 +21,7 @@ _ROMAN = re.compile(r"^\s*(i|ii|iii|iv|v|vi|vii|viii|ix|x)\s*$", re.I)
 _LEADING_INGREDIENTS = re.compile(r"^.*?\bingredients?\s*[:\-]\s*", re.I | re.S)
 
 _TRACE = re.compile(
-    r"(?:may\s+(?:also\s+)?contain(?:\s+traces?\s+of|\s+traces?)?"
+    r"(?:may\s+(?:also\s+)?contains?(?:\s+traces?\s+of|\s+traces?)?"
     r"|(?:manufactured|made|processed|produced|packed|prepared)\s+(?:in|on)\s+[^.\n:]*?"
     r"(?:facility|unit|plant|premises|equipment|line|factory)[^.\n:]*?"
     r"(?:handles?|process(?:es)?|uses?|manufactures?|contains?)\s*)"
@@ -170,6 +170,9 @@ def clean_text(text: str) -> str:
     """Remove markup, footnotes and packaging boilerplate around the ingredient list."""
     text = html.unescape(html.unescape(text or ""))
     text = text.replace("–", "-").replace("—", "-").replace("\r", "")
+    # Double quotes carry no meaning in an ingredient list; some labels use them as reference
+    # marks ('"Seasoning ... "As flavouring agent').
+    text = re.sub(r'["“”]', "", text)
     text = _strip_footnotes(text)
     text = _BOILERPLATE.sub(" ", text)
     m = _BOILERPLATE_END.search(text)

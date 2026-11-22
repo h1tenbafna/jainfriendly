@@ -70,6 +70,22 @@ CREATE TABLE IF NOT EXISTS product_verdicts (
 );
 CREATE INDEX IF NOT EXISTS idx_verdicts ON product_verdicts(profile, rank);
 
+-- Platform product details (ingredients etc.), cached because they don't vary by pincode.
+CREATE TABLE IF NOT EXISTS platform_details (
+    platform   TEXT NOT NULL,
+    product_id TEXT NOT NULL,
+    fetched_at TEXT NOT NULL DEFAULT (datetime('now')),
+    body       TEXT NOT NULL,
+    PRIMARY KEY (platform, product_id)
+);
+
+CREATE TABLE IF NOT EXISTS pincode_locations (
+    pincode TEXT PRIMARY KEY,
+    lat     REAL NOT NULL,
+    lon     REAL NOT NULL,
+    source  TEXT
+);
+
 CREATE VIRTUAL TABLE IF NOT EXISTS products_fts USING fts5(
     name, brand, ingredients_text, content='products', content_rowid='id'
 );

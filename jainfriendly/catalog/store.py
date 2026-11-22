@@ -15,7 +15,7 @@ from ..knowledge import DATA_DIR, get_knowledge
 from ..profiles import VERDICT_RANK, evaluate
 from .db import connect
 from .models import RawOffer, RawProduct
-from .platforms import platform_name
+from .platforms import PLATFORMS, platform_name
 
 NO_DATA = "no_data"
 RANKS = {**VERDICT_RANK, NO_DATA: 9}
@@ -76,6 +76,8 @@ def top_category(categories: list[str], name: str = "") -> str | None:
 def _priority(source: str | None) -> int:
     if not source:
         return 0
+    if source in PLATFORMS:  # text from the store listing itself
+        return SOURCE_PRIORITY["platform"]
     return SOURCE_PRIORITY.get(source.split(":")[0], 2)
 
 
@@ -155,8 +157,9 @@ class Catalog:
                    VALUES (?,?,?,?,?,?,?,?, datetime('now'))
                    ON CONFLICT (product_id, platform, location) DO UPDATE SET
                        platform_product_id = COALESCE(excluded.platform_product_id, platform_product_id),
-                       url = COALESCE(excluded.url, url), price = excluded.price, mrp = excluded.mrp,
-                       in_stock = excluded.in_stock, seen_at = excluded.seen_at""",
+                       url = COALESCE(excluded.url, url), price = COALESCE(excluded.price, price),
+                       mrp = COALESCE(excluded.mrp, mrp), in_stock = COALESCE(excluded.in_stock, in_stock),
+                       seen_at = excluded.seen_at""",
                 (
                     pid, o.platform, o.platform_product_id, o.url, o.price, o.mrp,
                     None if o.in_stock is None else int(o.in_stock), o.location or "",
@@ -281,6 +284,20 @@ class Catalog:
             [sort_profile] + args + [limit, offset],
         ).fetchall()
         return {"total": total, "items": [self._summary(r) for r in rows]}
+
+    def evaluate(self, pid: int, specs: list) -> list[dict] | None:
+        """Re-check one product against profiles with the user's own options (e.g. avoiding sonth).
+        Returns None if the product does not exist and [] if it has no ingredient text (no verdict
+        is possible, and we never default to "friendly")."""
+        row = self.conn.execute(
+            "SELECT ingredients_text, veg_mark FROM products WHERE id = ?", (pid,)
+        ).fetchone()
+        if row is None:
+            return None
+        if not row["ingredients_text"]:
+            return []
+        analysis = self.analyzer.analyze(row["ingredients_text"], row["veg_mark"])
+        return [evaluate(analysis, spec, self.kb).to_dict() for spec in specs]
 
     def get_by_gtin(self, gtin: str) -> dict | None:
         code = clean_gtin(gtin)

@@ -5,6 +5,7 @@
 GET  /v1/products       browse the catalogue: search + diet / allergen / tag / platform filters
 GET  /v1/products/{id}  one product with full analysis and where to buy
 GET  /v1/products/barcode/{gtin}  look up a scanned barcode
+POST /v1/products/{id}/evaluate   re-check a product with personal profile options
 GET  /v1/catalog        catalogue facets (categories, platforms, verdict counts)
 GET  /v1/platforms      supported platforms
 POST /v1/analyze        analyse ingredient text directly
@@ -20,6 +21,7 @@ from pathlib import Path
 from typing import Literal, Union
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -36,6 +38,9 @@ app = FastAPI(
     description="Tags what is inside a packaged food product and checks it against Jain, "
     "vegetarian, vegan and allergen profiles, with evidence for every result.",
 )
+
+# Read-only public data: allow browser clients (e.g. the Expo web build) from any origin.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST"], allow_headers=["*"])
 
 STATIC = Path(__file__).parent / "static"
 
@@ -216,6 +221,25 @@ def get_product(product_id: int) -> dict:
     product["attribution"] = ATTRIBUTION
     product["disclaimer"] = DISCLAIMER
     return product
+
+
+class EvaluateRequest(BaseModel):
+    profiles: list[ProfileArg] = Field(default_factory=lambda: list(DEFAULT_PROFILES), max_length=40)
+
+
+@app.post("/v1/products/{product_id}/evaluate")
+def evaluate_product(product_id: int, req: EvaluateRequest) -> dict:
+    """Verdicts for this product with the user's own options, e.g.
+    {"profiles": [{"id": "jain", "options": {"dried_rhizomes": true}}, "allergen:peanut"]}.
+    Products without an ingredient list return no profiles (never a "friendly" verdict)."""
+    try:
+        with _lock:
+            results = get_catalog().evaluate(product_id, [_spec(p) for p in req.profiles])
+    except KeyError as exc:
+        raise HTTPException(status_code=422, detail=str(exc.args[0])) from exc
+    if results is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return {"profiles": results, "disclaimer": DISCLAIMER}
 
 
 @app.get("/v1/catalog")

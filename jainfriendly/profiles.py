@@ -41,8 +41,11 @@ def _brief(tag) -> dict:
     d = {"id": tag.id, "label": tag.label, "status": tag.status}
     if tag.likelihood:
         d["likelihood"] = tag.likelihood
-    d["because"] = sorted({e.ingredient for e in tag.evidence})
-    reasons = sorted({e.reason for e in tag.evidence if e.reason})
+    # Cite only evidence at the tag's own status: a "present" potato is because of "potato",
+    # not because maltodextrin can sometimes be made from potato.
+    evidence = [e for e in tag.evidence if e.status == tag.status] or tag.evidence
+    d["because"] = sorted({e.ingredient for e in evidence})
+    reasons = sorted({e.reason for e in evidence if e.reason})
     if reasons:
         d["reasons"] = reasons
     return d

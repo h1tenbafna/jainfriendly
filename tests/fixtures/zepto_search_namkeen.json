@@ -1,0 +1,123 @@
+{
+ "_fixture_note": "Trimmed from a real Zepto search response (no location selected) captured in a browser on 2026-11-22 (search 'namkeen', Mumbai 400001). Real values in the real nesting; styling/tracking keys dropped, store ids zeroed.",
+ "layout": [
+  {
+   "widgetId": "TITLE_WIDGET",
+   "data": {}
+  },
+  {
+   "widgetId": "PRODUCT_GRID",
+   "data": {
+    "resolver": {
+     "data": {
+      "items": [
+       {
+        "productResponse": {
+         "product": {
+          "id": "c4bf1b8b-61a4-4839-9bae-ea9277ce596d",
+          "name": "Haldiram's Mixture | Crunchy Savory Snack",
+          "brand": "Haldiram's",
+          "ingredients": "Cornflakes (Derived from Corn) (26%), Edible Vegetable Oil, Potatoes (8%), Gram Pulse Flour (8%), Cashew Nuts (7%), Raisins (7%), Sugar Powder (6%), Edible Common Salt Powder, Spinach Powder, Edible Starch, Sesame Seeds, Mango Powder, Black Pepper Powder, Clove Powder, Mace Powder, Nutmeg Powder, Turmeric Powder, Cinnamon Powder, Black Salt Powder, Cardamom Powder, Ginger Powder, Cumin Powder, Fennel, Asafoetida Powder, Acidity Regulator (INS 330) and Anticaking Agent (INS 551). CONTAINS PERMITTED NATURAL COLOUR (INS 140).",
+          "countryOfOrigin": "India"
+         },
+         "productVariant": {
+          "id": "8182de89-dc3d-45df-9dac-ed962b646d10",
+          "productId": "c4bf1b8b-61a4-4839-9bae-ea9277ce596d",
+          "formattedPacksize": "1 pack (200 g)",
+          "packsize": 200,
+          "unitOfMeasure": "GRAM",
+          "images": [
+           {
+            "path": "cms/product_variant/10d086ca-847c-4a5d-96db-4a55e2c8034c.jpeg",
+            "name": "10d086ca-847c-4a5d-96db-4a55e2c8034c.jpeg",
+            "mediaType": "IMAGE"
+           }
+          ]
+         },
+         "mrp": 5500,
+         "sellingPrice": 5500,
+         "discountedSellingPrice": 5500,
+         "outOfStock": false,
+         "availableQuantity": 14
+        },
+        "position": 0,
+        "index": 0
+       },
+       {
+        "productResponse": {
+         "product": {
+          "id": "f3bbc93f-9be2-44dd-a198-4d088f2b19cd",
+          "name": "Haldiram's Bhujia | Spicy & Crunchy Snack",
+          "brand": "Haldiram's",
+          "ingredients": "Tepary Beans Flour (43%), Vegetable Oil (Cotton Seed, Corn & Palmolein), Chickpeas Flour (12%), Salt, Black Pepper Powder, Ginger Powder, Clove Powder and Cardamom Powder.",
+          "countryOfOrigin": "India"
+         },
+         "productVariant": {
+          "id": "3cbfea0c-f23f-4101-aa8f-a724cb5f3814",
+          "productId": "f3bbc93f-9be2-44dd-a198-4d088f2b19cd",
+          "formattedPacksize": "1 pack (200 g)",
+          "packsize": 200,
+          "unitOfMeasure": "GRAM",
+          "images": [
+           {
+            "path": "cms/product_variant/27282136-b33d-4b7e-bdb5-750c0db37047.jpeg",
+            "name": "27282136-b33d-4b7e-bdb5-750c0db37047.jpeg",
+            "mediaType": "IMAGE"
+           }
+          ]
+         },
+         "mrp": 6000,
+         "sellingPrice": 6000,
+         "discountedSellingPrice": 6000,
+         "outOfStock": false,
+         "availableQuantity": 34
+        },
+        "position": 1,
+        "index": 1
+       },
+       {
+        "productResponse": {
+         "product": {
+          "id": "871fde64-1823-42fc-b332-dad0cf129d46",
+          "name": "Haldiram's Aloo Bhujia Sev | Crunchy Savory Snack",
+          "brand": "Haldiram's",
+          "ingredients": null,
+          "countryOfOrigin": "India"
+         },
+         "productVariant": {
+          "id": "07a87f32-cb81-4dca-bfa6-a5af7937edb4",
+          "productId": "871fde64-1823-42fc-b332-dad0cf129d46",
+          "formattedPacksize": "1 pack (200 g)",
+          "packsize": 200,
+          "unitOfMeasure": "GRAM",
+          "images": [
+           {
+            "path": "cms/product_variant/ed01b616-3361-467d-bcbf-8f35b3ebfd3c.jpeg",
+            "name": "ed01b616-3361-467d-bcbf-8f35b3ebfd3c.jpeg",
+            "mediaType": "IMAGE"
+           }
+          ]
+         },
+         "mrp": 6000,
+         "sellingPrice": 6000,
+         "discountedSellingPrice": 6000,
+         "outOfStock": false,
+         "availableQuantity": 6
+        },
+        "position": 2,
+        "index": 2
+       }
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "totalProductCount": 200,
+ "currentPage": 0,
+ "hasReachedEnd": false,
+ "nextPageParams": {
+  "filterMode": 1,
+  "pageNumber": 1
+ }
+}

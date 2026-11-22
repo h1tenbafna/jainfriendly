@@ -221,3 +221,36 @@ def test_medicinal_roots_flagged_for_jain():
 def test_very_short_list_is_never_fully_friendly():
     assert verdict("chili powder extra", "jain") == "likely_friendly"
     assert verdict("Salt, sugar", "jain") == "friendly"
+
+
+# Real label: Lay's Classic Salted (Open Food Facts 8901491101837). The pack's reference marks
+# came through as straight double quotes instead of * or #.
+LAYS_QUOTE_MARKS = (
+    "Potato, Edible Vegetable Oil\n\n(Palmolein Oil), &quot;Seasoning (Maltodextrin, lodised Salt, "
+    "&quot;Spices & Condiments, Sugar, Flavour (Natural and Nature Identical Flavouring Substances), "
+    "Anticaking Agent (551), Flavour Enhancers (627, 631), Edible Vegetable Oil (Palm)).\n\n"
+    "&quot;As flavouring agent. &quot;Contains Onion & Garlic"
+)
+
+
+def test_double_quotes_used_as_reference_marks():
+    a = analyze(LAYS_QUOTE_MARKS)
+    paths = [e.ingredient for t in a.tags.values() for e in t.evidence] + a.unrecognized
+    assert not any('"' in p for p in paths), paths
+    assert {"potato", "onion", "garlic"} <= {t.id for t in a.present()}
+    assert verdict(LAYS_QUOTE_MARKS, "jain") == "not_friendly"
+
+
+def test_violation_evidence_lists_only_definite_sources():
+    """A present tag shouldn't cite 'maltodextrin' (only a possible potato source) as the reason."""
+    res = evaluate(analyze("Potato, seasoning (maltodextrin, salt)"), "jain")
+    potato = next(v for v in res.violations if v["id"] == "potato")
+    assert potato["because"] == ["Potato"]
+    assert "reasons" not in potato
+
+
+def test_may_contains_with_s():
+    """Real Blinkit allergen line (Haldiram's Nagpur Aloo Bhujia): 'May Contains Wheat, ...'."""
+    a = analyze("Gram flour, salt.\nMay Contains Wheat, Milk, Nut & Soy.")
+    assert a.declared_may_contain == ["Wheat", "Milk", "Nut", "Soy"]
+    assert a.tags["milk"].status == "trace"

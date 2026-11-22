@@ -1,0 +1,545 @@
+{
+ "_fixture_note": "Trimmed from a real Blinkit search response captured in a browser on 2026-11-22 (search 'namkeen', Mumbai 400001). Real values in the real nesting; styling/tracking keys dropped, store ids zeroed.",
+ "is_success": true,
+ "response": {
+  "snippets": [
+   {
+    "widget_type": "image_text_vr_type_header",
+    "data": {
+     "title": {
+      "text": "Showing results for \"namkeen\""
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "657845"
+     },
+     "product_id": "657845",
+     "name": {
+      "text": "Sunder Surati Mixture Namkeen"
+     },
+     "display_name": {
+      "text": "Sunder Surati Mixture Namkeen"
+     },
+     "brand_name": {
+      "text": "Sunder"
+     },
+     "variant": {
+      "text": "700 g"
+     },
+     "normal_price": {
+      "text": "₹146"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1771214347138-2070.png"
+     },
+     "inventory": 2,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 657845,
+        "merchant_id": 0,
+        "product_name": "Sunder Surati Mixture Namkeen",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 146,
+        "mrp": 250,
+        "unit": "700 g",
+        "inventory": 2,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1771214347138-2070.png",
+        "merchant_type": "express",
+        "brand": "Sunder",
+        "display_name": "Sunder Surati Mixture Namkeen"
+       }
+      }
+     },
+     "mrp": {
+      "text": "₹250"
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "35375"
+     },
+     "product_id": "35375",
+     "name": {
+      "text": "Haldiram's Nagpur Aloo Bhujia"
+     },
+     "display_name": {
+      "text": "Haldiram's Nagpur Aloo Bhujia"
+     },
+     "brand_name": {
+      "text": "Haldiram's Nagpur"
+     },
+     "variant": {
+      "text": "200 g"
+     },
+     "normal_price": {
+      "text": "₹60"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/83bcbbbc-524c-41b6-ad75-8c22278a5c51.png"
+     },
+     "inventory": 20,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 35375,
+        "merchant_id": 0,
+        "product_name": "Haldiram's Nagpur Aloo Bhujia",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 60,
+        "mrp": 60,
+        "unit": "200 g",
+        "inventory": 20,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/83bcbbbc-524c-41b6-ad75-8c22278a5c51.png",
+        "merchant_type": "express",
+        "brand": "Haldiram's Nagpur",
+        "display_name": "Haldiram's Nagpur Aloo Bhujia"
+       }
+      }
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "36024"
+     },
+     "product_id": "36024",
+     "name": {
+      "text": "Haldiram's Nagpur Sev Bhujia"
+     },
+     "display_name": {
+      "text": "Haldiram's Nagpur Sev Bhujia"
+     },
+     "brand_name": {
+      "text": "Haldiram's Nagpur"
+     },
+     "variant": {
+      "text": "200 g"
+     },
+     "normal_price": {
+      "text": "₹60"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/aec277c2-0222-4d19-a1f2-130a432a99fc.png"
+     },
+     "inventory": 15,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 36024,
+        "merchant_id": 0,
+        "product_name": "Haldiram's Nagpur Sev Bhujia",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 60,
+        "mrp": 60,
+        "unit": "200 g",
+        "inventory": 15,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/aec277c2-0222-4d19-a1f2-130a432a99fc.png",
+        "merchant_type": "express",
+        "brand": "Haldiram's Nagpur",
+        "display_name": "Haldiram's Nagpur Sev Bhujia"
+       }
+      }
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "721008"
+     },
+     "product_id": "721008",
+     "name": {
+      "text": "Tata Simply Better Salted Roasted Salted Cashew"
+     },
+     "display_name": {
+      "text": "Tata Simply Better Salted Roasted Salted Cashew"
+     },
+     "brand_name": {
+      "text": "Tata Simply Better"
+     },
+     "variant": {
+      "text": "23 g"
+     },
+     "normal_price": {
+      "text": "₹59"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1774841859469-346.png"
+     },
+     "inventory": 4,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 721008,
+        "merchant_id": 0,
+        "product_name": "Tata Simply Better Salted Roasted Salted Cashew",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 59,
+        "mrp": 59,
+        "unit": "23 g",
+        "inventory": 4,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1774841859469-346.png",
+        "merchant_type": "express",
+        "brand": "Tata Simply Better",
+        "display_name": "Tata Simply Better Salted Roasted Salted Cashew"
+       }
+      }
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "164707"
+     },
+     "product_id": "164707",
+     "name": {
+      "text": "Chheda's Farali Potato Falhari Mixture"
+     },
+     "display_name": {
+      "text": "Chheda's Farali Potato Falhari Mixture"
+     },
+     "brand_name": {
+      "text": "Chheda's"
+     },
+     "variant": {
+      "text": "170 g"
+     },
+     "normal_price": {
+      "text": "₹45"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/89c56120-de97-4041-ba1a-7a117205414e.png"
+     },
+     "inventory": 3,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 164707,
+        "merchant_id": 0,
+        "product_name": "Chheda's Farali Potato Falhari Mixture",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 45,
+        "mrp": 90,
+        "unit": "170 g",
+        "inventory": 3,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/89c56120-de97-4041-ba1a-7a117205414e.png",
+        "merchant_type": "express",
+        "brand": "Chheda's",
+        "display_name": "Chheda's Farali Potato Falhari Mixture"
+       }
+      }
+     },
+     "mrp": {
+      "text": "₹90"
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "372138"
+     },
+     "product_id": "372138",
+     "name": {
+      "text": "Chheda's Farsan Mixture Namkeen"
+     },
+     "display_name": {
+      "text": "Chheda's Farsan Mixture Namkeen"
+     },
+     "brand_name": {
+      "text": "Chheda's"
+     },
+     "variant": {
+      "text": "170 g"
+     },
+     "normal_price": {
+      "text": "₹55"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/63505961-5ac0-43f4-b429-93a1f24b2f86.png"
+     },
+     "inventory": 13,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 372138,
+        "merchant_id": 0,
+        "product_name": "Chheda's Farsan Mixture Namkeen",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 55,
+        "mrp": 55,
+        "unit": "170 g",
+        "inventory": 13,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/63505961-5ac0-43f4-b429-93a1f24b2f86.png",
+        "merchant_type": "express",
+        "brand": "Chheda's",
+        "display_name": "Chheda's Farsan Mixture Namkeen"
+       }
+      }
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "600731"
+     },
+     "product_id": "600731",
+     "name": {
+      "text": "Right Shift High Protein Roasted Navrattan Mixture"
+     },
+     "display_name": {
+      "text": "Right Shift High Protein Roasted Navrattan Mixture"
+     },
+     "brand_name": {
+      "text": "Right Shift"
+     },
+     "variant": {
+      "text": "250 g"
+     },
+     "normal_price": {
+      "text": "₹144"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/a44ac91a-0eb7-436e-8af9-f32164e9ab96.png"
+     },
+     "inventory": 3,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 600731,
+        "merchant_id": 0,
+        "product_name": "Right Shift High Protein Roasted Navrattan Mixture",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 144,
+        "mrp": 180,
+        "unit": "250 g",
+        "inventory": 3,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/a44ac91a-0eb7-436e-8af9-f32164e9ab96.png",
+        "merchant_type": "express",
+        "brand": "Right Shift",
+        "display_name": "Right Shift High Protein Roasted Navrattan Mixture"
+       }
+      }
+     },
+     "mrp": {
+      "text": "₹180"
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "115585"
+     },
+     "product_id": "115585",
+     "name": {
+      "text": "Balaji Aloo Sev Bhujia"
+     },
+     "display_name": {
+      "text": "Balaji Aloo Sev Bhujia"
+     },
+     "brand_name": {
+      "text": "Balaji"
+     },
+     "variant": {
+      "text": "200 g"
+     },
+     "normal_price": {
+      "text": "₹40"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1777953701494-9701.png"
+     },
+     "inventory": 6,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 115585,
+        "merchant_id": 0,
+        "product_name": "Balaji Aloo Sev Bhujia",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 40,
+        "mrp": 40,
+        "unit": "200 g",
+        "inventory": 6,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1777953701494-9701.png",
+        "merchant_type": "express",
+        "brand": "Balaji",
+        "display_name": "Balaji Aloo Sev Bhujia"
+       }
+      }
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "495690"
+     },
+     "product_id": "495690",
+     "name": {
+      "text": "Balaji Tikha Mitha Mixture Namkeen"
+     },
+     "display_name": {
+      "text": "Balaji Tikha Mitha Mixture Namkeen"
+     },
+     "brand_name": {
+      "text": "Balaji"
+     },
+     "variant": {
+      "text": "230 g"
+     },
+     "normal_price": {
+      "text": "₹45"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1772432009525-1607.png"
+     },
+     "inventory": 8,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 495690,
+        "merchant_id": 0,
+        "product_name": "Balaji Tikha Mitha Mixture Namkeen",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 45,
+        "mrp": 45,
+        "unit": "230 g",
+        "inventory": 8,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/rc-upload-1772432009525-1607.png",
+        "merchant_type": "express",
+        "brand": "Balaji",
+        "display_name": "Balaji Tikha Mitha Mixture Namkeen"
+       }
+      }
+     }
+    }
+   },
+   {
+    "widget_type": "product_card_snippet_type_2",
+    "data": {
+     "identity": {
+      "id": "1380006"
+     },
+     "product_id": "1380006",
+     "name": {
+      "text": "Bombay Sweet Shop Chilli Cheese Bhujia"
+     },
+     "display_name": {
+      "text": "Bombay Sweet Shop Chilli Cheese Bhujia"
+     },
+     "brand_name": {
+      "text": "Bombay Sweet Shop"
+     },
+     "variant": {
+      "text": "90 g"
+     },
+     "normal_price": {
+      "text": "₹130"
+     },
+     "image": {
+      "url": "https://cdn.grofers.com/da/cms-assets/cms/product/029e595c-ded9-49d5-b92c-fcbc33c1273b.png"
+     },
+     "inventory": 10,
+     "is_sold_out": false,
+     "product_state": "available",
+     "merchant_id": "0",
+     "merchant_type": "express",
+     "atc_action": {
+      "add_to_cart": {
+       "cart_item": {
+        "product_id": 1380006,
+        "merchant_id": 0,
+        "product_name": "Bombay Sweet Shop Chilli Cheese Bhujia",
+        "quantity": 1,
+        "unavailable_quantity": 0,
+        "price": 130,
+        "mrp": 135,
+        "unit": "90 g",
+        "inventory": 10,
+        "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/029e595c-ded9-49d5-b92c-fcbc33c1273b.png",
+        "merchant_type": "express",
+        "brand": "Bombay Sweet Shop",
+        "display_name": "Bombay Sweet Shop Chilli Cheese Bhujia"
+       }
+      }
+     },
+     "mrp": {
+      "text": "₹135"
+     }
+    }
+   }
+  ],
+  "pagination": {
+   "next_url": "/v1/layout/search?actual_query=namkeen&limit=12&offset=12&page_index=1&q=namkeen&search_type=type_to_search&total_pagination_items=392"
+  }
+ },
+ "postback_params": {
+  "previous_search_query": "namkeen",
+  "applied_filters": []
+ }
+}

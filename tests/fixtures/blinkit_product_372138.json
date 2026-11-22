@@ -1,0 +1,44 @@
+{
+ "_fixture_note": "Trimmed from a real Blinkit product response captured in a browser on 2026-11-22 (search 'namkeen', Mumbai 400001). Real values in the real nesting; styling/tracking keys dropped, store ids zeroed.",
+ "is_success": true,
+ "response": {
+  "snippets": [],
+  "tracking": {
+   "le_meta": {
+    "custom_data": {
+     "seo": {
+      "product_name": "Chheda's Farsan Mixture Namkeen",
+      "id": 372138,
+      "entity_id": "372138",
+      "entity_type": "product",
+      "brand": "Chheda's",
+      "price": 55,
+      "mrp": 55,
+      "inventory": 13,
+      "page_url": "https://blinkit.com/prn/chhedas-farsan-mixture-namkeen/prid/372138",
+      "images": [
+       "https://cdn.grofers.com/da/cms-assets/cms/product/63505961-5ac0-43f4-b429-93a1f24b2f86.jpg"
+      ],
+      "attributes": [
+       {
+        "name": "Ingredients",
+        "attribute_name": "Ingredients",
+        "value": "Gram flour 25% ,Palm oil 27% ,Bengal gram 46.8% ,Edible starch 0.2% ,Red chilli powder 0.3% ,Bishops weed 0.2% ,Curry leaves 0.3% ,salt 0.2%"
+       },
+       {
+        "name": "Unit",
+        "attribute_name": "Unit",
+        "value": "170 g"
+       },
+       {
+        "name": "Food Type",
+        "attribute_name": "Food Type",
+        "value": "veg"
+       }
+      ]
+     }
+    }
+   }
+  }
+ }
+}

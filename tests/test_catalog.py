@@ -167,3 +167,21 @@ def test_barcode_lookup_api(cat):
     client = TestClient(api.app)
     assert client.get("/v1/products/barcode/08901111111111").json()["name"] == "Masala chips"
     assert client.get("/v1/products/barcode/123").status_code == 404
+
+
+def test_evaluate_with_personal_options(cat):
+    """Mobile app: the stored verdict uses default options; a user who avoids sonth gets theirs."""
+    pid = add(cat, "Bhujia", BHUJIA, "8902222222222")
+    nodata = add(cat, "Mystery mix", None, "8904444444444")
+    api.set_catalog(cat)
+    client = TestClient(api.app)
+    body = {"profiles": ["jain", {"id": "jain", "options": {"dried_rhizomes": True}}, "allergen:peanut"]}
+    r = client.post(f"/v1/products/{pid}/evaluate", json=body).json()
+    assert [p["verdict"] for p in r["profiles"]] == ["friendly", "not_friendly", "friendly"]
+    assert r["profiles"][1]["violations"][0]["because"] == ["spices › dry ginger"]
+    assert client.post(f"/v1/products/{nodata}/evaluate", json=body).json()["profiles"] == []
+    assert client.post("/v1/products/99999/evaluate", json=body).status_code == 404
+    bad = {"profiles": [{"id": "jain", "options": {"nonsense": True}}]}
+    assert client.post(f"/v1/products/{pid}/evaluate", json=bad).status_code == 422
+    cors = client.get("/v1/catalog", headers={"Origin": "http://localhost:8081"})
+    assert cors.headers["access-control-allow-origin"] == "*"
